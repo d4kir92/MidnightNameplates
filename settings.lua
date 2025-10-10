@@ -6,15 +6,15 @@ MNNPSetup:SetScript(
     function(self, event, ...)
         if event == "PLAYER_LOGIN" then
             MNNP = MNNP or {}
-            MidnightNameplates:SetVersion(298591, "0.1.8")
-            MidnightNameplates:SetAddonOutput("MidnightNameplates", 298591)
+            MidnightNameplates:SetVersion(136142, "0.1.8")
+            MidnightNameplates:SetAddonOutput("MidnightNameplates", 136142)
             MidnightNameplates:AddSlash("mnnp", MidnightNameplates.ToggleSettings)
             MidnightNameplates:AddSlash("MidnightNameplates", MidnightNameplates.ToggleSettings)
             local mmbtn = nil
             MidnightNameplates:CreateMinimapButton(
                 {
                     ["name"] = "MidnightNameplates",
-                    ["icon"] = 298591,
+                    ["icon"] = 136142,
                     ["var"] = mmbtn,
                     ["dbtab"] = MNNP,
                     ["vTT"] = {{"M|cff3FC7EBidnight|rN|cff3FC7EBameplates|r", "v|cff3FC7EB" .. MidnightNameplates:GetVersion()}, {MidnightNameplates:Trans("LID_LEFTCLICK"), MidnightNameplates:Trans("LID_OPENSETTINGS")}, {MidnightNameplates:Trans("LID_RIGHTCLICK"), MidnightNameplates:Trans("LID_HIDEMINIMAPBUTTON")}},

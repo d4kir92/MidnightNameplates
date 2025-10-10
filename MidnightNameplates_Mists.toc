@@ -1,6 +1,6 @@
 ## Interface: 50501
 ## Version: 0.1.8
-## Title: M|cff3FC7EBidnight|rN|cff3FC7EBameplates|r |T298591:16:16:0:0|t by |cff3FC7EBD4KiR |T132115:16:16:0:0|t
+## Title: M|cff3FC7EBidnight|rN|cff3FC7EBameplates|r |T136142:16:16:0:0|t by |cff3FC7EBD4KiR |T132115:16:16:0:0|t
 ## Notes: An add-on that allows you to add features to tooltip, such as: xp-bar from party, compare items with party, etc.
 ## Notes-deDE: Ein Add-on, mit dem Sie Funktionen zum Tooltip hinzufügen können, z. B.: ep-bar von deiner gruppe, Gegenstände mit der Gruppe vergleichen
 ## Notes-ruRU: An add-on that allows you to add features to tooltip, such as: xp-bar from party, compare items with party, etc.
@@ -12,7 +12,7 @@
 ## SavedVariablesPerCharacter: MNNPPC
 ## X-Curse-Project-ID: 1360002
 ## X-Wago-ID: mKOvW16x
-## IconTexture: 298591
+## IconTexture: 136142
 
 libs\D4Lib\D4Lib.xml
 
