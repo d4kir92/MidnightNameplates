@@ -389,6 +389,7 @@ MidnightNameplates:RegisterEvent(nps, "NAME_PLATE_UNIT_REMOVED")
 MidnightNameplates:RegisterEvent(nps, "UNIT_HEALTH")
 MidnightNameplates:RegisterEvent(nps, "UNIT_MANA")
 MidnightNameplates:RegisterEvent(nps, "UNIT_POWER")
+MidnightNameplates:RegisterEvent(nps, "UNIT_POWER_UPDATE")
 MidnightNameplates:RegisterEvent(nps, "UNIT_AURA")
 MidnightNameplates:RegisterEvent(nps, "PLAYER_TARGET_CHANGED")
 MidnightNameplates:OnEvent(
@@ -425,8 +426,7 @@ MidnightNameplates:OnEvent(
             if plate and plate.MINA then
                 MidnightNameplates:UpdateHealth(plate, unit)
             end
-        elseif event == "UNIT_POWER" or event == "UNIT_MANA" then
-            print(event, ...)
+        elseif event == "UNIT_POWER_UPDATE" or event == "UNIT_POWER" or event == "UNIT_MANA" then
             local unit = ...
             local plate = C_NamePlate.GetNamePlateForUnit(unit)
             if plate and plate.MINA then
