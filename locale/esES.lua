@@ -1,0 +1,15 @@
+-- esES
+local _, MidnightNameplates = ...
+MidnightNameplates:AddTrans("esES", "LID_GENERAL", "General")
+MidnightNameplates:AddTrans("esES", "LID_TOOLTIP", "Tooltip")
+MidnightNameplates:AddTrans("esES", "LID_DEBUG", "DEBUG")
+MidnightNameplates:AddTrans("esES", "LID_SHOWMINIMAPBUTTON", "Show Minimap Button")
+MidnightNameplates:AddTrans("esES", "LID_SHOWPARTYITEMS", "Show Party Items")
+MidnightNameplates:AddTrans("esES", "LID_SHOWPARTYXPBAR", "Show Party XP-Bar")
+MidnightNameplates:AddTrans("esES", "LID_SHOWITEMID", "Show ItemID")
+MidnightNameplates:AddTrans("esES", "LID_SHOWSPELLID", "Show SpellID")
+MidnightNameplates:AddTrans("esES", "LID_SHOWICONID", "Show IconID")
+MidnightNameplates:AddTrans("esES", "LID_SHOWUNITID", "Show UnitID")
+MidnightNameplates:AddTrans("esES", "LID_SHOWGUID", "Show GUID")
+MidnightNameplates:AddTrans("esES", "LID_SHOWMACROID", "Show MacroID")
+MidnightNameplates:AddTrans("esES", "LID_SHOWSLOTID", "Show SlotID")
