@@ -85,12 +85,12 @@ end
 local oldTarget = nil
 function MidnightNameplates:UpdateTarget(plate, unit)
     if not UnitIsUnit(unit, "target") then return end
-    if oldTarget and oldTarget.MINA and oldTarget.MINA_TARGET and oldTarget.MINA_TARGET_TARGET then
-        oldTarget.MINA_TARGET_TARGET:Hide()
+    if oldTarget and oldTarget.MINA_TARGET and oldTarget.MINA_TARGET.Texture then
+        oldTarget.MINA_TARGET.Texture:Hide()
     end
 
-    if not plate or not plate.MINA or not plate.MINA_TARGET or not plate.MINA_TARGET_TARGET then return end
-    plate.MINA_TARGET_TARGET:Show()
+    if not plate or not plate.MINA_TARGET or not plate.MINA_TARGET.Texture then return end
+    plate.MINA_TARGET.Texture:Show()
     oldTarget = plate
 end
 
@@ -231,8 +231,8 @@ function MidnightNameplates:AddUF(np)
 
             if true then
                 MidnightNameplates:AddFrameBar(np, "MINA_TARGET", sw, sh, 20)
-                MidnightNameplates:AddTexture(np.MINA_TARGET, "MINA_TARGET_TARGET", "Interface\\AddOns\\MidnightNameplates\\media\\bar-target", "OVERLAY")
-                np.MINA_TARGET.MINA_TARGET_TARGET:Hide()
+                MidnightNameplates:AddTexture(np.MINA_TARGET, "Texture", "Interface\\AddOns\\MidnightNameplates\\media\\bar-target", "OVERLAY")
+                np.MINA_TARGET.Texture:Hide()
             end
 
             if true then
@@ -458,12 +458,7 @@ MidnightNameplates:OnEvent(
     npsc,
     function(sel, event, unit, ...)
         local plate = C_NamePlate.GetNamePlateForUnit(unit)
-        if plate == nil then
-            print(">>>", event, unit)
-
-            return
-        end
-
+        if plate == nil then return end
         if event == "UNIT_SPELLCAST_START" then
             local spell, _, _, startTime, endTime = UnitCastingInfo(unit)
             if spell then
