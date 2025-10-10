@@ -302,6 +302,8 @@ function MidnightNameplates:AddUF(np)
                             sel:SetValue(currentTime)
                             sel.MINA_CBTEXT.TEXT_CUR:SetText(string.format("%0.1f", (endTime - currentTime) / 1000) .. "s")
                             sel.Icon:SetTexture(icon)
+                        else
+                            sel:Hide()
                         end
                     else
                         local _, _, icon, _, endTime = UnitCastingInfo(sel.unit)
@@ -310,6 +312,8 @@ function MidnightNameplates:AddUF(np)
                             sel:SetValue(currentTime)
                             sel.MINA_CBTEXT.TEXT_CUR:SetText(string.format("%0.1f", (endTime - currentTime) / 1000) .. "s")
                             sel.Icon:SetTexture(icon)
+                        else
+                            sel:Hide()
                         end
                     end
                 end
@@ -454,7 +458,12 @@ MidnightNameplates:OnEvent(
     npsc,
     function(sel, event, unit, ...)
         local plate = C_NamePlate.GetNamePlateForUnit(unit)
-        if plate == nil then return end
+        if plate == nil then
+            print(">>>", event, unit)
+
+            return
+        end
+
         if event == "UNIT_SPELLCAST_START" then
             local spell, _, _, startTime, endTime = UnitCastingInfo(unit)
             if spell then
