@@ -46,7 +46,7 @@ function MidnightNameplates:AddFontString(parent, name, w, h, r, g, b, fontSize,
     MidnightNameplates:SetFontSize(parent[name], fontSize)
 end
 
-function MidnightNameplates:AddTexture(parent, name, texture, layer)
+function MidnightNameplates:AddTexture(parent, name, texture, layer, sublevel)
     if parent[name] ~= nil then
         MidnightNameplates:INFO("[AddTexture] Already Exists", name)
 
@@ -56,6 +56,7 @@ function MidnightNameplates:AddTexture(parent, name, texture, layer)
     parent[name] = parent:CreateTexture(name, layer)
     parent[name]:SetTexture(texture)
     parent[name]:SetAllPoints(parent)
+    parent[name]:SetDrawLayer(layer, sublevel)
 end
 
 function MidnightNameplates:ClampText(text, max_length)
@@ -381,7 +382,7 @@ function MidnightNameplates:AddUF(np)
             end
 
             if true then
-                MidnightNameplates:AddTexture(np.MINA_CB, "Shield", nil, "ARTWORK")
+                MidnightNameplates:AddTexture(np.MINA_CB, "Shield", nil, "ARTWORK", 1)
                 np.MINA_CB.Shield:SetAtlas("ui-castingbar-shield")
                 np.MINA_CB.Shield:SetSize(16, 16)
                 np.MINA_CB.Shield:ClearAllPoints()
@@ -389,7 +390,7 @@ function MidnightNameplates:AddUF(np)
             end
 
             if true then
-                MidnightNameplates:AddTexture(np.MINA_CB, "Icon", nil, "ARTWORK")
+                MidnightNameplates:AddTexture(np.MINA_CB, "Icon", nil, "ARTWORK", 2)
                 np.MINA_CB.Icon:SetSize(10, 10)
                 np.MINA_CB.Icon:ClearAllPoints()
                 np.MINA_CB.Icon:SetPoint("CENTER", np.MINA_CB.Shield, "CENTER", 0, 1)
@@ -454,21 +455,26 @@ MidnightNameplates:OnEvent(
             plate.UnitFrame:Hide()
             if plate and plate.MINA then
                 plate.MINA:Show()
-                plate.MINA_NAME.TEXT:SetText(n)
+                if plate.MINA_NAME and plate.MINA_NAME.TEXT then
+                    plate.MINA_NAME.TEXT:SetText(n)
+                end
+
                 MidnightNameplates:UpdateHealth(plate, unit)
                 MidnightNameplates:UpdatePower(plate, unit)
                 MidnightNameplates:UpdateDebuffs(plate, unit)
                 MidnightNameplates:UpdateTarget(plate, unit)
                 plate.MINA_CB.unit = unit
-                local classification = UnitClassification(unit)
-                if classification == "elite" then
-                    plate.MINA_HP.TYP:SetAtlas("nameplates-icon-elite-gold")
-                    plate.MINA_HP.TYP:Show()
-                elseif classification == "rare" or classification == "rareelite" then
-                    plate.MINA_HP.TYP:SetAtlas("nameplates-icon-elite-silver")
-                    plate.MINA_HP.TYP:Show()
-                else
-                    plate.MINA_HP.TYP:Hide()
+                if plate.MINA_HP then
+                    local classification = UnitClassification(unit)
+                    if classification == "elite" then
+                        plate.MINA_HP.TYP:SetAtlas("nameplates-icon-elite-gold")
+                        plate.MINA_HP.TYP:Show()
+                    elseif classification == "rare" or classification == "rareelite" then
+                        plate.MINA_HP.TYP:SetAtlas("nameplates-icon-elite-silver")
+                        plate.MINA_HP.TYP:Show()
+                    else
+                        plate.MINA_HP.TYP:Hide()
+                    end
                 end
             end
         elseif event == "NAME_PLATE_UNIT_REMOVED" then
