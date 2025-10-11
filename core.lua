@@ -1,4 +1,7 @@
 local _, MidnightNameplates = ...
+local NAME = true
+local DEBUFFS = true
+local DEBUFF_BACKGROUND = false
 local sw = 160
 local sh = 9
 local maxDebuffs = 5
@@ -74,7 +77,7 @@ end
 function MidnightNameplates:IconOnUpdate(sel, elapsed)
     if not sel.expirationTime then return end
     local remain = sel.expirationTime - GetTime()
-    if remain > 0 then
+    if remain >= 0 then
         sel.text:SetText(MidnightNameplates:FormatTime(remain))
     else
         sel:SetScript("OnUpdate", nil)
@@ -98,8 +101,8 @@ function MidnightNameplates:UpdateDebuffs(plate, unit)
     if not plate or not plate.MINA_DEBUFFS then return end
     local frame = plate.MINA_DEBUFFS
     for _, icon in ipairs(frame.icons) do
-        icon:Hide()
         icon:SetScript("OnUpdate", nil)
+        icon:Hide()
     end
 
     local shown = 0
@@ -107,7 +110,7 @@ function MidnightNameplates:UpdateDebuffs(plate, unit)
     repeat
         local aura = C_UnitAuras.GetAuraDataByIndex(unit, index, "HARMFUL")
         if not aura then break end
-        if (not onlyPlayerDebuffs) or (aura.sourceUnit == "player") then
+        if ((not onlyPlayerDebuffs) or (aura.sourceUnit == "player")) and aura.expirationTime > 0 then
             shown = shown + 1
             if shown > maxDebuffs then break end
             local icon = frame.icons[shown]
@@ -126,6 +129,12 @@ function MidnightNameplates:UpdateDebuffs(plate, unit)
                 icon.text = icon:CreateFontString(nil, "OVERLAY", "GameFontNormalTiny")
                 icon.text:SetPoint("CENTER", icon, "CENTER", 0, 0)
                 icon.text:SetTextColor(1, 1, 1)
+                MidnightNameplates:SetFontSize(icon.text, 7, "OUTLINE")
+                icon.amount = icon:CreateFontString(nil, "OVERLAY", "GameFontNormalTiny")
+                icon.amount:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", 0, 0)
+                icon.amount:SetTextColor(1, 1, 1)
+                MidnightNameplates:SetFontSize(icon.amount, 5, "OUTLINE")
+                icon:ClearAllPoints()
                 if shown == 1 then
                     icon:SetPoint("LEFT", frame, "LEFT", 0, 0)
                 else
@@ -137,6 +146,12 @@ function MidnightNameplates:UpdateDebuffs(plate, unit)
 
             icon.cooldown:SetCooldown(aura.expirationTime - aura.duration, aura.duration)
             icon.texture:SetTexture(aura.icon)
+            if aura.applications > 0 then
+                icon.amount:SetText(aura.applications)
+            else
+                icon.amount:SetText("")
+            end
+
             icon.expirationTime = aura.expirationTime
             icon:Show()
             icon:SetScript(
@@ -356,7 +371,7 @@ function MidnightNameplates:AddUF(np)
         end
 
         -- NAME
-        if true then
+        if NAME then
             MidnightNameplates:AddFrameBar(np, "MINA_NAME", sw, sh, 30)
             MidnightNameplates:AddFontString(np.MINA_NAME, "TEXT", sw, sh, 1, 1, 1, 9, "OVERLAY", "GameFontNormalSmall")
             np.MINA_NAME.TEXT:SetJustifyH("LEFT")
@@ -368,7 +383,7 @@ function MidnightNameplates:AddUF(np)
         end
 
         -- DEBUFFS
-        if true then
+        if DEBUFFS then
             MidnightNameplates:AddFrameBar(np, "MINA_DEBUFFS", sw, sh, 30)
             if true then
                 np.MINA_DEBUFFS:SetPoint("BOTTOMLEFT", np.MINA_NAME, "TOPLEFT", 0, 8)
@@ -378,7 +393,7 @@ function MidnightNameplates:AddUF(np)
 
             np.MINA_DEBUFFS:SetSize(sw, 16)
             np.MINA_DEBUFFS.icons = {}
-            if false then
+            if DEBUFF_BACKGROUND then
                 MidnightNameplates:AddTexture(np.MINA_DEBUFFS, "MINA_DEBUFFS_BG", nil, "BACKGROUND")
                 np.MINA_DEBUFFS.MINA_DEBUFFS_BG:SetColorTexture(0.1, 0.1, 0.1, 0.5)
             end
