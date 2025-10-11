@@ -262,6 +262,14 @@ function MidnightNameplates:AddUF(np)
                     np.MINA_HPTEXT.TEXT_PER:SetPoint("RIGHT", np.MINA_HPTEXT, "RIGHT", 0, 0)
                 end
             end
+
+            if true then
+                MidnightNameplates:AddTexture(np.MINA_HP, "TYP", nil, "ARTWORK")
+                np.MINA_HP.TYP:SetAtlas("nameplates-icon-elite-gold")
+                np.MINA_HP.TYP:SetSize(16, 16)
+                np.MINA_HP.TYP:ClearAllPoints()
+                np.MINA_HP.TYP:SetPoint("RIGHT", np.MINA_HP, "LEFT", -2, 0)
+            end
         end
 
         -- POWER
@@ -311,8 +319,14 @@ function MidnightNameplates:AddUF(np)
                     if sel.unit == nil then return end
                     local name = UnitChannelInfo(sel.unit)
                     if name then
-                        local _, _, icon, _, endTime = UnitChannelInfo(sel.unit)
+                        local _, _, icon, _, endTime, _, _, notInterruptible = UnitChannelInfo(sel.unit)
                         if endTime then
+                            if notInterruptible then
+                                sel.Shield:Show()
+                            else
+                                sel.Shield:Hide()
+                            end
+
                             local currentTime = GetTime() * 1000
                             sel:SetValue(currentTime)
                             sel.MINA_CBTEXT.TEXT_CUR:SetText(string.format("%0.1f", (endTime - currentTime) / 1000) .. "s")
@@ -321,8 +335,14 @@ function MidnightNameplates:AddUF(np)
                             sel:Hide()
                         end
                     else
-                        local _, _, icon, _, endTime = UnitCastingInfo(sel.unit)
+                        local _, _, icon, _, endTime, _, _, notInterruptible = UnitCastingInfo(sel.unit)
                         if endTime then
+                            if notInterruptible then
+                                sel.Shield:Show()
+                            else
+                                sel.Shield:Hide()
+                            end
+
                             local currentTime = GetTime() * 1000
                             sel:SetValue(currentTime)
                             sel.MINA_CBTEXT.TEXT_CUR:SetText(string.format("%0.1f", (endTime - currentTime) / 1000) .. "s")
@@ -361,10 +381,18 @@ function MidnightNameplates:AddUF(np)
             end
 
             if true then
+                MidnightNameplates:AddTexture(np.MINA_CB, "Shield", nil, "ARTWORK")
+                np.MINA_CB.Shield:SetAtlas("ui-castingbar-shield")
+                np.MINA_CB.Shield:SetSize(16, 16)
+                np.MINA_CB.Shield:ClearAllPoints()
+                np.MINA_CB.Shield:SetPoint("RIGHT", np.MINA_CB, "LEFT", -2, -2)
+            end
+
+            if true then
                 MidnightNameplates:AddTexture(np.MINA_CB, "Icon", nil, "ARTWORK")
-                np.MINA_CB.Icon:SetSize(8, 8)
+                np.MINA_CB.Icon:SetSize(10, 10)
                 np.MINA_CB.Icon:ClearAllPoints()
-                np.MINA_CB.Icon:SetPoint("RIGHT", np.MINA_CB, "LEFT", -2, 0)
+                np.MINA_CB.Icon:SetPoint("CENTER", np.MINA_CB.Shield, "CENTER", 0, 1)
             end
 
             np.MINA_CB:Hide()
@@ -432,6 +460,16 @@ MidnightNameplates:OnEvent(
                 MidnightNameplates:UpdateDebuffs(plate, unit)
                 MidnightNameplates:UpdateTarget(plate, unit)
                 plate.MINA_CB.unit = unit
+                local classification = UnitClassification(unit)
+                if classification == "elite" then
+                    plate.MINA_HP.TYP:SetAtlas("nameplates-icon-elite-gold")
+                    plate.MINA_HP.TYP:Show()
+                elseif classification == "rare" or classification == "rareelite" then
+                    plate.MINA_HP.TYP:SetAtlas("nameplates-icon-elite-silver")
+                    plate.MINA_HP.TYP:Show()
+                else
+                    plate.MINA_HP.TYP:Hide()
+                end
             end
         elseif event == "NAME_PLATE_UNIT_REMOVED" then
             local unit = ...
