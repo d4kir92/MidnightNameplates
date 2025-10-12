@@ -430,112 +430,166 @@ function MidnightNameplates:AddUF(np)
     end
 end
 
-local nps = CreateFrame("Frame")
-MidnightNameplates:RegisterEvent(nps, "NAME_PLATE_CREATED")
-MidnightNameplates:RegisterEvent(nps, "NAME_PLATE_UNIT_ADDED")
-MidnightNameplates:RegisterEvent(nps, "NAME_PLATE_UNIT_REMOVED")
-MidnightNameplates:RegisterEvent(nps, "UNIT_HEALTH")
-MidnightNameplates:RegisterEvent(nps, "UNIT_MANA")
-MidnightNameplates:RegisterEvent(nps, "UNIT_POWER")
-MidnightNameplates:RegisterEvent(nps, "UNIT_POWER_UPDATE")
-MidnightNameplates:RegisterEvent(nps, "UNIT_AURA")
-MidnightNameplates:RegisterEvent(nps, "PLAYER_TARGET_CHANGED")
+local npnpc = CreateFrame("Frame")
+MidnightNameplates:RegisterEvent(npnpc, "NAME_PLATE_CREATED")
 MidnightNameplates:OnEvent(
-    nps,
-    function(sel, event, ...)
-        if event == "PLAYER_LOGIN" then
-            print("LOADED")
-        elseif event == "NAME_PLATE_CREATED" then
-            local plate = ...
-            MidnightNameplates:AddUF(plate)
-        elseif event == "NAME_PLATE_UNIT_ADDED" then
-            local unit = ...
-            local n = MidnightNameplates:ClampText(UnitName(unit) or "?", 20)
-            local plate = C_NamePlate.GetNamePlateForUnit(unit)
-            plate.UnitFrame:Hide()
-            if plate and plate.MINA then
-                plate.MINA:Show()
-                if plate.MINA_NAME and plate.MINA_NAME.TEXT then
-                    plate.MINA_NAME.TEXT:SetText(n)
-                end
+    npnpc,
+    function(sel, event, plate, ...)
+        if plate == nil then return end
+        MidnightNameplates:AddUF(plate)
+    end, "npnpc"
+)
 
-                MidnightNameplates:UpdateHealth(plate, unit)
-                MidnightNameplates:UpdatePower(plate, unit)
-                MidnightNameplates:UpdateDebuffs(plate, unit)
-                MidnightNameplates:UpdateTarget(plate, unit)
-                plate.MINA_CB.unit = unit
-                if plate.MINA_HP then
-                    local classification = UnitClassification(unit)
-                    if classification == "elite" then
-                        plate.MINA_HP.TYP:SetAtlas("nameplates-icon-elite-gold")
-                        plate.MINA_HP.TYP:Show()
-                    elseif classification == "rare" or classification == "rareelite" then
-                        plate.MINA_HP.TYP:SetAtlas("nameplates-icon-elite-silver")
-                        plate.MINA_HP.TYP:Show()
-                    else
-                        plate.MINA_HP.TYP:Hide()
-                    end
-                end
-            end
-        elseif event == "NAME_PLATE_UNIT_REMOVED" then
-            local unit = ...
-            local plate = C_NamePlate.GetNamePlateForUnit(unit)
-            if plate.MINA then
-                plate.MINA:Hide()
-            end
-        elseif event == "UNIT_HEALTH" then
-            local unit = ...
-            local plate = C_NamePlate.GetNamePlateForUnit(unit)
-            if plate and plate.MINA then
-                MidnightNameplates:UpdateHealth(plate, unit)
-            end
-        elseif event == "UNIT_POWER_UPDATE" or event == "UNIT_POWER" or event == "UNIT_MANA" then
-            local unit = ...
-            local plate = C_NamePlate.GetNamePlateForUnit(unit)
-            if plate and plate.MINA then
-                MidnightNameplates:UpdatePower(plate, unit)
-            end
-        elseif event == "UNIT_AURA" then
-            local unit = ...
-            local plate = C_NamePlate.GetNamePlateForUnit(unit)
-            MidnightNameplates:UpdateDebuffs(plate, unit)
-        elseif event == "PLAYER_TARGET_CHANGED" then
-            local plate = C_NamePlate.GetNamePlateForUnit("target")
-            MidnightNameplates:UpdateTarget(plate, "target")
+local uac = 0
+local npua = CreateFrame("Frame")
+MidnightNameplates:RegisterEvent(npua, "UNIT_AURA")
+MidnightNameplates:OnEvent(
+    npua,
+    function(sel, event, unit, ...)
+        local plate = C_NamePlate.GetNamePlateForUnit(unit)
+        if plate == nil then return end
+        if plate.MINA == nil then return end
+        uac = uac + 1
+        MidnightNameplates:UpdateDebuffs(plate, unit)
+    end, "npua"
+)
+
+local uhc = 0
+local npuh = CreateFrame("Frame")
+MidnightNameplates:RegisterEvent(npuh, "UNIT_HEALTH")
+MidnightNameplates:OnEvent(
+    npuh,
+    function(sel, event, unit, ...)
+        local plate = C_NamePlate.GetNamePlateForUnit(unit)
+        if plate == nil then return end
+        if plate.MINA == nil then return end
+        uhc = uhc + 1
+        MidnightNameplates:UpdateHealth(plate, unit)
+    end, "npuh"
+)
+
+local upc = 0
+local npup = CreateFrame("Frame")
+MidnightNameplates:RegisterEvent(npup, "UNIT_MANA")
+MidnightNameplates:RegisterEvent(npup, "UNIT_POWER")
+MidnightNameplates:RegisterEvent(npup, "UNIT_POWER_UPDATE")
+MidnightNameplates:OnEvent(
+    npup,
+    function(sel, event, unit, ...)
+        local plate = C_NamePlate.GetNamePlateForUnit(unit)
+        if plate == nil then return end
+        if plate.MINA == nil then return end
+        upc = upc + 1
+        MidnightNameplates:UpdatePower(plate, unit)
+    end, "npup"
+)
+
+local npnpua = CreateFrame("Frame")
+MidnightNameplates:RegisterEvent(npnpua, "NAME_PLATE_UNIT_ADDED")
+MidnightNameplates:OnEvent(
+    npnpua,
+    function(sel, event, unit, ...)
+        local plate = C_NamePlate.GetNamePlateForUnit(unit)
+        if plate == nil then return end
+        if plate.MINA == nil then return end
+        local n = MidnightNameplates:ClampText(UnitName(unit) or "?", 20)
+        plate.UnitFrame:Hide()
+        plate.MINA:Show()
+        if plate.MINA_NAME and plate.MINA_NAME.TEXT then
+            plate.MINA_NAME.TEXT:SetText(n)
         end
-    end, "nps"
+
+        MidnightNameplates:UpdateHealth(plate, unit)
+        MidnightNameplates:UpdatePower(plate, unit)
+        MidnightNameplates:UpdateDebuffs(plate, unit)
+        MidnightNameplates:UpdateTarget(plate, unit)
+        plate.MINA_CB.unit = unit
+        if plate.MINA_HP then
+            local classification = UnitClassification(unit)
+            if classification == "elite" then
+                plate.MINA_HP.TYP:SetAtlas("nameplates-icon-elite-gold")
+                plate.MINA_HP.TYP:Show()
+            elseif classification == "rare" or classification == "rareelite" then
+                plate.MINA_HP.TYP:SetAtlas("nameplates-icon-elite-silver")
+                plate.MINA_HP.TYP:Show()
+            else
+                plate.MINA_HP.TYP:Hide()
+            end
+        end
+    end, "npnpua"
+)
+
+local npnpur = CreateFrame("Frame")
+MidnightNameplates:RegisterEvent(npnpur, "NAME_PLATE_UNIT_REMOVED")
+MidnightNameplates:OnEvent(
+    npnpur,
+    function(sel, event, unit, ...)
+        local plate = C_NamePlate.GetNamePlateForUnit(unit)
+        if plate == nil then return end
+        if plate.MINA == nil then return end
+        plate.MINA:Hide()
+    end, "npnpur"
+)
+
+local npptc = CreateFrame("Frame")
+MidnightNameplates:RegisterEvent(npptc, "PLAYER_TARGET_CHANGED")
+MidnightNameplates:OnEvent(
+    npptc,
+    function(sel, event, ...)
+        local plate = C_NamePlate.GetNamePlateForUnit("target")
+        if plate == nil then return end
+        if plate.MINA == nil then return end
+        MidnightNameplates:UpdateTarget(plate, "target")
+    end, "npptc"
 )
 
 local npsc = CreateFrame("Frame")
-MidnightNameplates:RegisterEvent(npsc, "UNIT_SPELLCAST_START")
 MidnightNameplates:RegisterEvent(npsc, "UNIT_SPELLCAST_STOP")
 MidnightNameplates:RegisterEvent(npsc, "UNIT_SPELLCAST_INTERRUPTED")
-MidnightNameplates:RegisterEvent(npsc, "UNIT_SPELLCAST_CHANNEL_START")
-MidnightNameplates:RegisterEvent(npsc, "UNIT_SPELLCAST_CHANNEL_UPDATE")
 MidnightNameplates:RegisterEvent(npsc, "UNIT_SPELLCAST_CHANNEL_STOP")
 MidnightNameplates:OnEvent(
     npsc,
     function(sel, event, unit, ...)
         local plate = C_NamePlate.GetNamePlateForUnit(unit)
         if plate == nil then return end
-        if event == "UNIT_SPELLCAST_START" then
-            local spell, _, _, startTime, endTime = UnitCastingInfo(unit)
-            if spell then
-                plate.MINA_CB:Show()
-                plate.MINA_CB.MINA_CBTEXT.TEXT_NAME:SetText(spell)
-                plate.MINA_CB:SetMinMaxValues(startTime, endTime)
-                plate.MINA_CB:SetValue(GetTime() * 1000)
-            end
-        elseif event == "UNIT_SPELLCAST_STOP" or event == "UNIT_SPELLCAST_INTERRUPTED" then
-            plate.MINA_CB:Hide()
-        elseif event == "UNIT_SPELLCAST_CHANNEL_START" then
-            local spell, _, _, startTime, endTime = UnitChannelInfo(unit)
-            if spell then
-                plate.MINA_CB:Show()
-                plate.MINA_CB.MINA_CBTEXT.TEXT_NAME:SetText(spell)
-                plate.MINA_CB:SetMinMaxValues(startTime, endTime)
-                plate.MINA_CB:SetValue(GetTime() * 1000)
-            end
-        end
+        if plate.MINA == nil then return end
+        plate.MINA_CB:Hide()
     end, "npsc"
+)
+
+local npscs = CreateFrame("Frame")
+MidnightNameplates:RegisterEvent(npscs, "UNIT_SPELLCAST_START")
+MidnightNameplates:OnEvent(
+    npscs,
+    function(sel, event, unit, ...)
+        local plate = C_NamePlate.GetNamePlateForUnit(unit)
+        if plate == nil then return end
+        if plate.MINA == nil then return end
+        local spell, _, _, startTime, endTime = UnitCastingInfo(unit)
+        if spell then
+            plate.MINA_CB:Show()
+            plate.MINA_CB.MINA_CBTEXT.TEXT_NAME:SetText(spell)
+            plate.MINA_CB:SetMinMaxValues(startTime, endTime)
+            plate.MINA_CB:SetValue(GetTime() * 1000)
+        end
+    end, "npscs"
+)
+
+local npsccs = CreateFrame("Frame")
+MidnightNameplates:RegisterEvent(npsccs, "UNIT_SPELLCAST_CHANNEL_START")
+MidnightNameplates:RegisterEvent(npsccs, "UNIT_SPELLCAST_CHANNEL_UPDATE")
+MidnightNameplates:OnEvent(
+    npsccs,
+    function(sel, event, unit, ...)
+        local plate = C_NamePlate.GetNamePlateForUnit(unit)
+        if plate == nil then return end
+        if plate.MINA == nil then return end
+        local spell, _, _, startTime, endTime = UnitChannelInfo(unit)
+        if spell then
+            plate.MINA_CB:Show()
+            plate.MINA_CB.MINA_CBTEXT.TEXT_NAME:SetText(spell)
+            plate.MINA_CB:SetMinMaxValues(startTime, endTime)
+            plate.MINA_CB:SetValue(GetTime() * 1000)
+        end
+    end, "npsccs"
 )
