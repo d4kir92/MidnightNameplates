@@ -2,10 +2,17 @@ local _, MidnightNameplates = ...
 local NAME = true
 local DEBUFFS = true
 local DEBUFF_BACKGROUND = false
-local sw = 160
-local sh = 9
-local maxDebuffs = 5
 local onlyPlayerDebuffs = true
+local widthBars = {}
+local heightBars = {}
+function MidnightNameplates:WidthBars()
+    return widthBars
+end
+
+function MidnightNameplates:HeightBars()
+    return heightBars
+end
+
 function MidnightNameplates:AddFrameBar(parent, name, w, h, level)
     if parent[name] ~= nil then
         MidnightNameplates:INFO("[AddFrameBar] Already Exists", name)
@@ -113,7 +120,7 @@ function MidnightNameplates:UpdateDebuffs(plate, unit)
         if not aura then break end
         if ((not onlyPlayerDebuffs) or (aura.sourceUnit == "player")) and aura.expirationTime > 0 then
             shown = shown + 1
-            if shown > maxDebuffs then break end
+            if shown > MNNP["MAXDEBUFFS"] then break end
             local icon = frame.icons[shown]
             if not icon then
                 icon = CreateFrame("Frame", nil, frame)
@@ -196,7 +203,19 @@ function MidnightNameplates:UpdateHealth(plate, unit)
     plate.MINA_HP:Show()
 end
 
+function MidnightNameplates:HidePowerBar(plate)
+    plate.MINA_PO:Hide()
+    plate.MINA_PO.MINA_POTEXT.TEXT_CUR:SetText("")
+    plate.MINA_PO.MINA_POTEXT.TEXT_PER:SetText("")
+end
+
 function MidnightNameplates:UpdatePower(plate, unit)
+    if not MNNP["POWERBAR"] then
+        MidnightNameplates:HidePowerBar(plate)
+
+        return
+    end
+
     local _, powerToken = UnitPowerType(unit)
     if powerToken then
         local color = PowerBarColor[powerToken]
@@ -207,9 +226,7 @@ function MidnightNameplates:UpdatePower(plate, unit)
 
     local po, max = UnitPower(unit), UnitPowerMax(unit)
     if max == nil or max <= 0 then
-        plate.MINA_PO:Hide()
-        plate.MINA_PO.MINA_POTEXT.TEXT_CUR:SetText("")
-        plate.MINA_PO.MINA_POTEXT.TEXT_PER:SetText("")
+        MidnightNameplates:HidePowerBar(plate)
 
         return
     end
@@ -223,10 +240,14 @@ end
 
 function MidnightNameplates:AddUF(np)
     if not np.MINA then
-        MidnightNameplates:AddFrameBar(np, "MINA", sw, sh, 1)
+        MidnightNameplates:AddFrameBar(np, "MINA", MNNP["BARWIDTH"], MNNP["BARHEIGHT"], 1)
+        tinsert(widthBars, np.MINA)
+        tinsert(heightBars, np.MINA)
         -- HP
         if true then
-            MidnightNameplates:AddStatusBar(np, "MINA_HP", sw, sh, 2)
+            MidnightNameplates:AddStatusBar(np, "MINA_HP", MNNP["BARWIDTH"], MNNP["BARHEIGHT"], 2)
+            tinsert(widthBars, np.MINA_HP)
+            tinsert(heightBars, np.MINA_HP)
             np.MINA_HP:SetMinMaxValues(0, 100)
             np.MINA_HP:SetValue(50)
             if true then
@@ -240,22 +261,30 @@ function MidnightNameplates:AddUF(np)
 
             MidnightNameplates:AddTexture(np.MINA_HP, "HP_BG", "Interface\\AddOns\\MidnightNameplates\\media\\bar-bg", "BACKGROUND")
             if true then
-                MidnightNameplates:AddFrameBar(np.MINA_HP, "MINA_HP_BR", sw, sh, 10)
+                MidnightNameplates:AddFrameBar(np.MINA_HP, "MINA_HP_BR", MNNP["BARWIDTH"], MNNP["BARHEIGHT"], 10)
+                tinsert(widthBars, np.MINA_HP.MINA_HP_BR)
+                tinsert(heightBars, np.MINA_HP.MINA_HP_BR)
                 MidnightNameplates:AddTexture(np.MINA_HP.MINA_HP_BR, "Texture", "Interface\\AddOns\\MidnightNameplates\\media\\bar-border", "OVERLAY")
                 np.MINA_HP.MINA_HP_BR.Texture:SetVertexColor(0.5, 0.5, 0.5)
             end
 
             if true then
-                MidnightNameplates:AddFrameBar(np, "MINA_TARGET", sw, sh, 20)
+                MidnightNameplates:AddFrameBar(np, "MINA_TARGET", MNNP["BARWIDTH"], MNNP["BARHEIGHT"], 20)
+                tinsert(widthBars, np.MINA_TARGET)
+                tinsert(heightBars, np.MINA_TARGET)
                 MidnightNameplates:AddTexture(np.MINA_TARGET, "Texture", "Interface\\AddOns\\MidnightNameplates\\media\\bar-target", "OVERLAY")
                 np.MINA_TARGET.Texture:Hide()
             end
 
             if true then
-                MidnightNameplates:AddFrameBar(np, "MINA_HPTEXT", sw, sh, 30)
-                MidnightNameplates:AddFontString(np.MINA_HPTEXT, "TEXT_CUR", sw, sh, 1, 1, 1, 9, "OVERLAY", "GameFontNormalSmall")
+                MidnightNameplates:AddFrameBar(np, "MINA_HPTEXT", MNNP["BARWIDTH"], MNNP["BARHEIGHT"], 30)
+                tinsert(widthBars, np.MINA_HPTEXT)
+                tinsert(heightBars, np.MINA_HPTEXT)
+                MidnightNameplates:AddFontString(np.MINA_HPTEXT, "TEXT_CUR", MNNP["BARWIDTH"], 9, 1, 1, 1, 9, "OVERLAY", "GameFontNormalSmall")
+                tinsert(widthBars, np.MINA_HPTEXT.TEXT_CUR)
                 np.MINA_HPTEXT.TEXT_CUR:SetJustifyH("RIGHT")
-                MidnightNameplates:AddFontString(np.MINA_HPTEXT, "TEXT_PER", sw, sh, 1, 1, 1, 9, "OVERLAY", "GameFontNormalSmall")
+                MidnightNameplates:AddFontString(np.MINA_HPTEXT, "TEXT_PER", MNNP["BARWIDTH"], 9, 1, 1, 1, 9, "OVERLAY", "GameFontNormalSmall")
+                tinsert(widthBars, np.MINA_HPTEXT.TEXT_PER)
                 np.MINA_HPTEXT.TEXT_PER:SetJustifyH("RIGHT")
                 if true then
                     np.MINA_HPTEXT.TEXT_PER:SetPoint("BOTTOMRIGHT", np.MINA_HPTEXT, "TOPRIGHT", 0, -1)
@@ -275,7 +304,9 @@ function MidnightNameplates:AddUF(np)
 
         -- POWER
         if true then
-            MidnightNameplates:AddStatusBar(np, "MINA_PO", sw, sh, 2)
+            MidnightNameplates:AddStatusBar(np, "MINA_PO", MNNP["BARWIDTH"], MNNP["BARHEIGHT"], 2)
+            tinsert(widthBars, np.MINA_PO)
+            tinsert(heightBars, np.MINA_PO)
             np.MINA_PO:SetMinMaxValues(0, 100)
             np.MINA_PO:SetValue(50)
             np.MINA_PO:ClearAllPoints()
@@ -291,17 +322,22 @@ function MidnightNameplates:AddUF(np)
 
             MidnightNameplates:AddTexture(np.MINA_PO, "MINA_PO_BG", "Interface\\AddOns\\MidnightNameplates\\media\\bar-bg", "BACKGROUND")
             if true then
-                MidnightNameplates:AddFrameBar(np.MINA_PO, "MINA_PO_BR", sw, sh, 10)
+                MidnightNameplates:AddFrameBar(np.MINA_PO, "MINA_PO_BR", MNNP["BARWIDTH"], MNNP["BARHEIGHT"], 10)
+                tinsert(widthBars, np.MINA_PO.MINA_PO_BR)
+                tinsert(heightBars, np.MINA_PO.MINA_PO_BR)
                 MidnightNameplates:AddTexture(np.MINA_PO.MINA_PO_BR, "Texture", "Interface\\AddOns\\MidnightNameplates\\media\\bar-border", "OVERLAY")
                 np.MINA_PO.MINA_PO_BR.Texture:SetVertexColor(0.5, 0.5, 0.5)
             end
 
             if true then
-                MidnightNameplates:AddFrameBar(np.MINA_PO, "MINA_POTEXT", sw, sh, 30)
-                MidnightNameplates:AddFontString(np.MINA_PO.MINA_POTEXT, "TEXT_CUR", sw, sh, 1, 1, 1, 7, "OVERLAY", "GameFontNormalSmall")
+                MidnightNameplates:AddFrameBar(np.MINA_PO, "MINA_POTEXT", MNNP["BARWIDTH"], 9, 30)
+                tinsert(widthBars, np.MINA_PO.MINA_POTEXT)
+                MidnightNameplates:AddFontString(np.MINA_PO.MINA_POTEXT, "TEXT_CUR", MNNP["BARWIDTH"], 9, 1, 1, 1, 7, "OVERLAY", "GameFontNormalSmall")
+                tinsert(widthBars, np.MINA_PO.TEXT_CUR)
                 np.MINA_PO.MINA_POTEXT.TEXT_CUR:SetJustifyH("LEFT")
                 np.MINA_PO.MINA_POTEXT.TEXT_CUR:SetPoint("LEFT", np.MINA_POTEXT, "LEFT", 4, 0)
-                MidnightNameplates:AddFontString(np.MINA_PO.MINA_POTEXT, "TEXT_PER", sw, sh, 1, 1, 1, 7, "OVERLAY", "GameFontNormalSmall")
+                MidnightNameplates:AddFontString(np.MINA_PO.MINA_POTEXT, "TEXT_PER", MNNP["BARWIDTH"], 9, 1, 1, 1, 7, "OVERLAY", "GameFontNormalSmall")
+                tinsert(widthBars, np.MINA_PO.TEXT_PER)
                 np.MINA_PO.MINA_POTEXT.TEXT_PER:SetJustifyH("RIGHT")
                 np.MINA_PO.MINA_POTEXT.TEXT_PER:SetPoint("RIGHT", np.MINA_PO.MINA_POTEXT, "RIGHT", -4, 0)
             end
@@ -309,7 +345,9 @@ function MidnightNameplates:AddUF(np)
 
         -- CASTBAR
         if true then
-            MidnightNameplates:AddStatusBar(np, "MINA_CB", sw, sh, 2)
+            MidnightNameplates:AddStatusBar(np, "MINA_CB", MNNP["BARWIDTH"], MNNP["BARHEIGHT"], 2)
+            tinsert(widthBars, np.MINA_CB)
+            tinsert(heightBars, np.MINA_CB)
             np.MINA_CB:SetMinMaxValues(0, 100)
             np.MINA_CB:SetValue(0)
             np.MINA_CB:ClearAllPoints()
@@ -317,6 +355,12 @@ function MidnightNameplates:AddUF(np)
             np.MINA_CB:SetScript(
                 "OnUpdate",
                 function(sel, elapsed)
+                    if not MNNP["CASTBAR"] then
+                        sel:Hide()
+
+                        return
+                    end
+
                     if sel.unit == nil then return end
                     local name = UnitChannelInfo(sel.unit)
                     if name then
@@ -366,17 +410,22 @@ function MidnightNameplates:AddUF(np)
 
             MidnightNameplates:AddTexture(np.MINA_CB, "MINA_CB_BG", "Interface\\AddOns\\MidnightNameplates\\media\\bar-bg", "BACKGROUND")
             if true then
-                MidnightNameplates:AddFrameBar(np.MINA_CB, "MINA_CB_BR", sw, sh, 10)
+                MidnightNameplates:AddFrameBar(np.MINA_CB, "MINA_CB_BR", MNNP["BARWIDTH"], MNNP["BARHEIGHT"], 10)
+                tinsert(widthBars, np.MINA_CB.MINA_CB_BR)
+                tinsert(heightBars, np.MINA_CB.MINA_CB_BR)
                 MidnightNameplates:AddTexture(np.MINA_CB.MINA_CB_BR, "Texture", "Interface\\AddOns\\MidnightNameplates\\media\\bar-border", "OVERLAY")
                 np.MINA_CB.MINA_CB_BR.Texture:SetVertexColor(0.5, 0.5, 0.5)
             end
 
             if true then
-                MidnightNameplates:AddFrameBar(np.MINA_CB, "MINA_CBTEXT", sw, sh, 30)
-                MidnightNameplates:AddFontString(np.MINA_CB.MINA_CBTEXT, "TEXT_CUR", sw, sh, 1, 1, 1, 7, "OVERLAY", "GameFontNormalSmall")
+                MidnightNameplates:AddFrameBar(np.MINA_CB, "MINA_CBTEXT", MNNP["BARWIDTH"], 9, 30)
+                tinsert(widthBars, np.MINA_CB.MINA_CBTEXT)
+                MidnightNameplates:AddFontString(np.MINA_CB.MINA_CBTEXT, "TEXT_CUR", MNNP["BARWIDTH"], 9, 1, 1, 1, 7, "OVERLAY", "GameFontNormalSmall")
+                tinsert(widthBars, np.MINA_CB.TEXT_CUR)
                 np.MINA_CB.MINA_CBTEXT.TEXT_CUR:SetJustifyH("RIGHT")
                 np.MINA_CB.MINA_CBTEXT.TEXT_CUR:SetPoint("RIGHT", np.MINA_CB.MINA_CBTEXT, "RIGHT", -4, 0)
-                MidnightNameplates:AddFontString(np.MINA_CB.MINA_CBTEXT, "TEXT_NAME", sw, sh, 1, 1, 1, 7, "OVERLAY", "GameFontNormalSmall")
+                MidnightNameplates:AddFontString(np.MINA_CB.MINA_CBTEXT, "TEXT_NAME", MNNP["BARWIDTH"], 9, 1, 1, 1, 7, "OVERLAY", "GameFontNormalSmall")
+                tinsert(widthBars, np.MINA_CB.MINA_CBTEXT.TEXT_NAME)
                 np.MINA_CB.MINA_CBTEXT.TEXT_NAME:SetJustifyH("CENTER")
                 np.MINA_CB.MINA_CBTEXT.TEXT_NAME:SetPoint("CENTER", np.MINA_CB.MINA_CBTEXT, "CENTER", 0, 0)
             end
@@ -401,9 +450,13 @@ function MidnightNameplates:AddUF(np)
 
         -- NAME
         if NAME then
-            MidnightNameplates:AddFrameBar(np, "MINA_NAME", sw, sh, 30)
-            MidnightNameplates:AddFontString(np.MINA_NAME, "TEXT", sw, sh, 1, 1, 1, 9, "OVERLAY", "GameFontNormalSmall")
+            MidnightNameplates:AddFrameBar(np, "MINA_NAME", MNNP["BARWIDTH"], MNNP["BARHEIGHT"], 30)
+            tinsert(widthBars, np.MINA_NAME)
+            tinsert(heightBars, np.MINA_NAME)
+            MidnightNameplates:AddFontString(np.MINA_NAME, "TEXT", MNNP["BARWIDTH"], 9, 1, 1, 1, 9, "OVERLAY", "GameFontNormalSmall")
+            tinsert(widthBars, np.MINA_NAME.TEXT)
             np.MINA_NAME.TEXT:SetJustifyH("LEFT")
+            np.MINA_NAME.TEXT:ClearAllPoints()
             if true then
                 np.MINA_NAME.TEXT:SetPoint("BOTTOMLEFT", np.MINA_NAME, "TOPLEFT", 0, -1)
             else
@@ -413,14 +466,15 @@ function MidnightNameplates:AddUF(np)
 
         -- DEBUFFS
         if DEBUFFS then
-            MidnightNameplates:AddFrameBar(np, "MINA_DEBUFFS", sw, sh, 30)
+            MidnightNameplates:AddFrameBar(np, "MINA_DEBUFFS", MNNP["BARWIDTH"], 16, 30)
+            tinsert(widthBars, np.MINA_DEBUFFS)
             if true then
                 np.MINA_DEBUFFS:SetPoint("BOTTOMLEFT", np.MINA_NAME, "TOPLEFT", 0, 8)
             else
                 np.MINA_DEBUFFS:SetPoint("BOTTOMLEFT", np.MINA_HP, "TOPLEFT", 0, 0)
             end
 
-            np.MINA_DEBUFFS:SetSize(sw, 16)
+            np.MINA_DEBUFFS:SetSize(MNNP["BARWIDTH"], 16)
             np.MINA_DEBUFFS.icons = {}
             if DEBUFF_BACKGROUND then
                 MidnightNameplates:AddTexture(np.MINA_DEBUFFS, "MINA_DEBUFFS_BG", nil, "BACKGROUND")
@@ -476,6 +530,7 @@ MidnightNameplates:RegisterEvent(npup, "UNIT_POWER_UPDATE")
 MidnightNameplates:OnEvent(
     npup,
     function(sel, event, unit, ...)
+        if not MNNP["POWERBAR"] then return end
         local plate = C_NamePlate.GetNamePlateForUnit(unit)
         if plate == nil then return end
         if plate.MINA == nil then return end
@@ -550,6 +605,7 @@ MidnightNameplates:RegisterEvent(npsc, "UNIT_SPELLCAST_CHANNEL_STOP")
 MidnightNameplates:OnEvent(
     npsc,
     function(sel, event, unit, ...)
+        if not MNNP["CASTBAR"] then return end
         local plate = C_NamePlate.GetNamePlateForUnit(unit)
         if plate == nil then return end
         if plate.MINA == nil then return end
@@ -562,6 +618,7 @@ MidnightNameplates:RegisterEvent(npscs, "UNIT_SPELLCAST_START")
 MidnightNameplates:OnEvent(
     npscs,
     function(sel, event, unit, ...)
+        if not MNNP["CASTBAR"] then return end
         local plate = C_NamePlate.GetNamePlateForUnit(unit)
         if plate == nil then return end
         if plate.MINA == nil then return end
@@ -581,6 +638,7 @@ MidnightNameplates:RegisterEvent(npsccs, "UNIT_SPELLCAST_CHANNEL_UPDATE")
 MidnightNameplates:OnEvent(
     npsccs,
     function(sel, event, unit, ...)
+        if not MNNP["CASTBAR"] then return end
         local plate = C_NamePlate.GetNamePlateForUnit(unit)
         if plate == nil then return end
         if plate.MINA == nil then return end

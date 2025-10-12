@@ -6,7 +6,7 @@ MNNPSetup:SetScript(
     function(self, event, ...)
         if event == "PLAYER_LOGIN" then
             MNNP = MNNP or {}
-            MidnightNameplates:SetVersion(136142, "0.1.5")
+            MidnightNameplates:SetVersion(136142, "0.1.6")
             MidnightNameplates:SetAddonOutput("MidnightNameplates", 136142)
             MidnightNameplates:AddSlash("mnnp", MidnightNameplates.ToggleSettings)
             MidnightNameplates:AddSlash("MidnightNameplates", MidnightNameplates.ToggleSettings)
@@ -48,6 +48,15 @@ end
 
 function MidnightNameplates:InitSettings()
     MNNP = MNNP or {}
+    if MNNP["POWERBAR"] == nil then
+        MNNP["POWERBAR"] = true
+    end
+
+    if MNNP["CASTBAR"] == nil then
+        MNNP["CASTBAR"] = true
+    end
+
+    MNNP["MAXDEBUFFS"] = MNNP["MAXDEBUFFS"] or 5
     mn_settings = MidnightNameplates:CreateWindow(
         {
             ["name"] = "MidnightNameplates",
@@ -78,4 +87,35 @@ function MidnightNameplates:InitSettings()
     )
 
     MidnightNameplates:AppendCategory("NAMEPLATE")
+    MidnightNameplates:AppendSlider(
+        "BARWIDTH",
+        160,
+        80,
+        240,
+        10,
+        0,
+        function(sel, val)
+            for i, v in ipairs(MidnightNameplates:WidthBars()) do
+                v:SetWidth(val)
+            end
+        end, "BARWIDTH"
+    )
+
+    MidnightNameplates:AppendSlider(
+        "BARHEIGHT",
+        9,
+        3,
+        20,
+        1,
+        0,
+        function(sel, val)
+            for i, v in ipairs(MidnightNameplates:HeightBars()) do
+                v:SetHeight(val)
+            end
+        end, "BARHEIGHT"
+    )
+
+    MidnightNameplates:AppendSlider("MAXDEBUFFS", 5, 1, 9, 1, 0, function(sel, val) end, "MAXDEBUFFS")
+    MidnightNameplates:AppendCheckbox("POWERBAR", true)
+    MidnightNameplates:AppendCheckbox("CASTBAR", true)
 end
