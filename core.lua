@@ -203,7 +203,17 @@ function MidnightNameplates:UpdateHealth(plate, unit)
     plate.MINA_HP:Show()
 end
 
+function MidnightNameplates:ShowPowerBar(plate)
+    if plate == nil then return end
+    if plate.MINA == nil then return end
+    if plate.MINA_CB and plate.MINA_CB.unit then
+        MidnightNameplates:UpdatePower(plate, plate.MINA_CB.unit)
+    end
+end
+
 function MidnightNameplates:HidePowerBar(plate)
+    if plate == nil then return end
+    if plate.MINA == nil then return end
     plate.MINA_PO:Hide()
     plate.MINA_PO.MINA_POTEXT.TEXT_CUR:SetText("")
     plate.MINA_PO.MINA_POTEXT.TEXT_PER:SetText("")
@@ -236,6 +246,29 @@ function MidnightNameplates:UpdatePower(plate, unit)
     plate.MINA_PO.MINA_POTEXT.TEXT_CUR:SetText(string.format("%d", po))
     plate.MINA_PO.MINA_POTEXT.TEXT_PER:SetText(string.format("%0.0f%%", po / max * 100))
     plate.MINA_PO:Show()
+end
+
+function MidnightNameplates:ShowCastBar(plate)
+    if plate == nil then return end
+    if plate.MINA == nil then return end
+    if plate.MINA_CB and plate.MINA_CB.unit then
+        local spell, _, _, startTime, endTime = UnitCastingInfo(plate.MINA_CB.unit)
+        if spell then
+            plate.MINA_CB:Show()
+            plate.MINA_CB.MINA_CBTEXT.TEXT_NAME:SetText(spell)
+            plate.MINA_CB:SetMinMaxValues(startTime, endTime)
+            plate.MINA_CB:SetValue(GetTime() * 1000)
+        end
+    end
+end
+
+function MidnightNameplates:HideCastBar(plate)
+    if plate == nil then return end
+    if plate.MINA == nil then return end
+    if plate.MINA_CB then
+        plate.MINA_CB.MINA_CBTEXT.TEXT_CUR:SetText("")
+        plate.MINA_CB:Hide()
+    end
 end
 
 function MidnightNameplates:AddUF(np)
@@ -356,7 +389,7 @@ function MidnightNameplates:AddUF(np)
                 "OnUpdate",
                 function(sel, elapsed)
                     if not MNNP["CASTBAR"] then
-                        sel:Hide()
+                        MidnightNameplates:HideCastBar(np)
 
                         return
                     end
@@ -377,8 +410,7 @@ function MidnightNameplates:AddUF(np)
                             sel.MINA_CBTEXT.TEXT_CUR:SetText(string.format("%0.1f", (endTime - currentTime) / 1000) .. "s")
                             sel.Icon:SetTexture(icon)
                         else
-                            sel.MINA_CBTEXT.TEXT_CUR:SetText("")
-                            sel:Hide()
+                            MidnightNameplates:HideCastBar(np)
                         end
                     else
                         local _, _, icon, _, endTime, _, _, notInterruptible = UnitCastingInfo(sel.unit)
@@ -394,8 +426,7 @@ function MidnightNameplates:AddUF(np)
                             sel.MINA_CBTEXT.TEXT_CUR:SetText(string.format("%0.1f", (endTime - currentTime) / 1000) .. "s")
                             sel.Icon:SetTexture(icon)
                         else
-                            sel.MINA_CBTEXT.TEXT_CUR:SetText("")
-                            sel:Hide()
+                            MidnightNameplates:HideCastBar(np)
                         end
                     end
                 end
@@ -541,6 +572,24 @@ MidnightNameplates:OnEvent(
     end, "npup"
 )
 
+local fontSizes = {}
+fontSizes[80] = 8
+fontSizes[90] = 11
+fontSizes[100] = 13
+fontSizes[110] = 15
+fontSizes[120] = 17
+fontSizes[130] = 19
+fontSizes[140] = 21
+fontSizes[150] = 23
+fontSizes[160] = 25
+fontSizes[170] = 26
+fontSizes[180] = 28
+fontSizes[190] = 30
+fontSizes[200] = 32
+fontSizes[210] = 33
+fontSizes[220] = 35
+fontSizes[230] = 37
+fontSizes[240] = 39
 local npnpua = CreateFrame("Frame")
 MidnightNameplates:RegisterEvent(npnpua, "NAME_PLATE_UNIT_ADDED")
 MidnightNameplates:OnEvent(
@@ -549,7 +598,8 @@ MidnightNameplates:OnEvent(
         local plate = C_NamePlate.GetNamePlateForUnit(unit)
         if plate == nil then return end
         if plate.MINA == nil then return end
-        local n = MidnightNameplates:ClampText(UnitName(unit) or "?", 20)
+        local fs = fontSizes[MNNP["BARWIDTH"]] or 50
+        local n = MidnightNameplates:ClampText(UnitName(unit) or "?", fs)
         plate.UnitFrame:Hide()
         plate.MINA:Show()
         if plate.MINA_NAME and plate.MINA_NAME.TEXT then
@@ -622,15 +672,7 @@ MidnightNameplates:OnEvent(
     function(sel, event, unit, ...)
         if not MNNP["CASTBAR"] then return end
         local plate = C_NamePlate.GetNamePlateForUnit(unit)
-        if plate == nil then return end
-        if plate.MINA == nil then return end
-        local spell, _, _, startTime, endTime = UnitCastingInfo(unit)
-        if spell then
-            plate.MINA_CB:Show()
-            plate.MINA_CB.MINA_CBTEXT.TEXT_NAME:SetText(spell)
-            plate.MINA_CB:SetMinMaxValues(startTime, endTime)
-            plate.MINA_CB:SetValue(GetTime() * 1000)
-        end
+        MidnightNameplates:ShowCastBar(plate)
     end, "npscs"
 )
 

@@ -6,7 +6,7 @@ MNNPSetup:SetScript(
     function(self, event, ...)
         if event == "PLAYER_LOGIN" then
             MNNP = MNNP or {}
-            MidnightNameplates:SetVersion(136142, "0.1.7")
+            MidnightNameplates:SetVersion(136142, "0.1.8")
             MidnightNameplates:SetAddonOutput("MidnightNameplates", 136142)
             MidnightNameplates:AddSlash("mnnp", MidnightNameplates.ToggleSettings)
             MidnightNameplates:AddSlash("MidnightNameplates", MidnightNameplates.ToggleSettings)
@@ -116,6 +116,31 @@ function MidnightNameplates:InitSettings()
     )
 
     MidnightNameplates:AppendSlider("MAXDEBUFFS", 5, 1, 9, 1, 0, function(sel, val) end, "MAXDEBUFFS")
-    MidnightNameplates:AppendCheckbox("POWERBAR", true)
-    MidnightNameplates:AppendCheckbox("CASTBAR", true)
+    MidnightNameplates:AppendCheckbox(
+        "POWERBAR",
+        true,
+        function(sel, val)
+            for i, plate in ipairs(C_NamePlate.GetNamePlates()) do
+                if val then
+                    MidnightNameplates:ShowPowerBar(plate)
+                else
+                    MidnightNameplates:HidePowerBar(plate)
+                end
+            end
+        end
+    )
+
+    MidnightNameplates:AppendCheckbox(
+        "CASTBAR",
+        true,
+        function(sel, val)
+            for i, plate in ipairs(C_NamePlate.GetNamePlates()) do
+                if val then
+                    MidnightNameplates:ShowCastBar(plate)
+                else
+                    MidnightNameplates:HideCastBar(plate)
+                end
+            end
+        end
+    )
 end
