@@ -644,8 +644,6 @@ MidnightNameplates:OnEvent(
     npptc,
     function(sel, event, ...)
         local plate = C_NamePlate.GetNamePlateForUnit("target")
-        if plate == nil then return end
-        if plate.MINA == nil then return end
         MidnightNameplates:UpdateTarget(plate, "target")
     end, "npptc"
 )

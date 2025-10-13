@@ -1,5 +1,5 @@
 ## Interface: 30300, 30403
-## Version: 0.1.8
+## Version: 0.1.9
 ## Title: M|cff3FC7EBidnight|rN|cff3FC7EBameplates|r |T136142:16:16:0:0|t by |cff3FC7EBD4KiR |T132115:16:16:0:0|t
 ## Notes: An add-on that replaces the default nameplates with midnight-like nameplates.
 ## Notes-deDE: Ein Add-on das die Standard-Namensplaketten mit Midnight-ähnlichen Namensplaketten ersetzt.
