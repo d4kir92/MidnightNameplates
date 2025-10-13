@@ -1,9 +1,9 @@
 ## Interface: 20504
 ## Version: 0.1.6
 ## Title: M|cff3FC7EBidnight|rN|cff3FC7EBameplates|r |T136142:16:16:0:0|t by |cff3FC7EBD4KiR |T132115:16:16:0:0|t
-## Notes: An add-on that allows you to add features to tooltip, such as: xp-bar from party, compare items with party, etc.
-## Notes-deDE: Ein Add-on, mit dem Sie Funktionen zum Tooltip hinzufügen können, z. B.: ep-bar von deiner gruppe, Gegenstände mit der Gruppe vergleichen
-## Notes-ruRU: An add-on that allows you to add features to tooltip, such as: xp-bar from party, compare items with party, etc.
+## Notes: An add-on that replaces the default nameplates with midnight-like nameplates.
+## Notes-deDE: Ein Add-on das die Standard-Namensplaketten mit Midnight-ähnlichen Namensplaketten ersetzt.
+## Notes-ruRU: An add-on that replaces the default nameplates with midnight-like nameplates.
 ## Author: D|cff3FC7EB4KiR |T132115:16:16:0:0|t
 ## Category: D|cff3FC7EB4KiR |T132115:16:16:0:0|t
 ## X-Category: D|cff3FC7EB4KiR |T132115:16:16:0:0|t
