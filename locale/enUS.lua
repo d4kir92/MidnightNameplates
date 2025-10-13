@@ -7,5 +7,5 @@ MidnightNameplates:AddTrans("enUS", "LID_SHOWMINIMAPBUTTON", "Show Minimap Butto
 MidnightNameplates:AddTrans("enUS", "LID_BARWIDTH", "Bar Width: %d (Default: 160)")
 MidnightNameplates:AddTrans("enUS", "LID_BARHEIGHT", "Bar Height: %d (Default: 9)")
 MidnightNameplates:AddTrans("enUS", "LID_MAXDEBUFFS", "Max Debuffs: %d (Default: 5)")
-MidnightNameplates:AddTrans("enUS", "LID_POWERBAR", "Power Bar")
+MidnightNameplates:AddTrans("enUS", "LID_POWERBAR", "Power Bar (Mana, Energy, Rage, ...)")
 MidnightNameplates:AddTrans("enUS", "LID_CASTBAR", "Cast Bar")

@@ -377,6 +377,7 @@ function MidnightNameplates:AddUF(np)
                             sel.MINA_CBTEXT.TEXT_CUR:SetText(string.format("%0.1f", (endTime - currentTime) / 1000) .. "s")
                             sel.Icon:SetTexture(icon)
                         else
+                            sel.MINA_CBTEXT.TEXT_CUR:SetText("")
                             sel:Hide()
                         end
                     else
@@ -393,6 +394,7 @@ function MidnightNameplates:AddUF(np)
                             sel.MINA_CBTEXT.TEXT_CUR:SetText(string.format("%0.1f", (endTime - currentTime) / 1000) .. "s")
                             sel.Icon:SetTexture(icon)
                         else
+                            sel.MINA_CBTEXT.TEXT_CUR:SetText("")
                             sel:Hide()
                         end
                     end
