@@ -5,6 +5,32 @@ local DEBUFF_BACKGROUND = false
 local onlyPlayerDebuffs = true
 local widthBars = {}
 local heightBars = {}
+local fontSizes = {}
+fontSizes[80] = 8
+fontSizes[90] = 11
+fontSizes[100] = 13
+fontSizes[110] = 15
+fontSizes[120] = 17
+fontSizes[130] = 19
+fontSizes[140] = 21
+fontSizes[150] = 23
+fontSizes[160] = 25
+fontSizes[170] = 26
+fontSizes[180] = 28
+fontSizes[190] = 30
+fontSizes[200] = 32
+fontSizes[210] = 33
+fontSizes[220] = 35
+fontSizes[230] = 37
+fontSizes[240] = 39
+function MidnightNameplates:SetName(plate, unit)
+    local fs = fontSizes[MNNP["BARWIDTH"]] or 50
+    local n = MidnightNameplates:ClampText(UnitName(unit) or "?", fs)
+    if plate.MINA_NAME and plate.MINA_NAME.TEXT then
+        plate.MINA_NAME.TEXT:SetText(n)
+    end
+end
+
 function MidnightNameplates:WidthBars()
     return widthBars
 end
@@ -527,7 +553,6 @@ MidnightNameplates:OnEvent(
     end, "npnpc"
 )
 
-local uac = 0
 local npua = CreateFrame("Frame")
 MidnightNameplates:RegisterEvent(npua, "UNIT_AURA")
 MidnightNameplates:OnEvent(
@@ -536,12 +561,10 @@ MidnightNameplates:OnEvent(
         local plate = C_NamePlate.GetNamePlateForUnit(unit)
         if plate == nil then return end
         if plate.MINA == nil then return end
-        uac = uac + 1
         MidnightNameplates:UpdateDebuffs(plate, unit)
     end, "npua"
 )
 
-local uhc = 0
 local npuh = CreateFrame("Frame")
 MidnightNameplates:RegisterEvent(npuh, "UNIT_HEALTH")
 MidnightNameplates:OnEvent(
@@ -550,12 +573,10 @@ MidnightNameplates:OnEvent(
         local plate = C_NamePlate.GetNamePlateForUnit(unit)
         if plate == nil then return end
         if plate.MINA == nil then return end
-        uhc = uhc + 1
         MidnightNameplates:UpdateHealth(plate, unit)
     end, "npuh"
 )
 
-local upc = 0
 local npup = CreateFrame("Frame")
 MidnightNameplates:RegisterEvent(npup, "UNIT_MANA")
 MidnightNameplates:RegisterEvent(npup, "UNIT_POWER")
@@ -567,29 +588,10 @@ MidnightNameplates:OnEvent(
         local plate = C_NamePlate.GetNamePlateForUnit(unit)
         if plate == nil then return end
         if plate.MINA == nil then return end
-        upc = upc + 1
         MidnightNameplates:UpdatePower(plate, unit)
     end, "npup"
 )
 
-local fontSizes = {}
-fontSizes[80] = 8
-fontSizes[90] = 11
-fontSizes[100] = 13
-fontSizes[110] = 15
-fontSizes[120] = 17
-fontSizes[130] = 19
-fontSizes[140] = 21
-fontSizes[150] = 23
-fontSizes[160] = 25
-fontSizes[170] = 26
-fontSizes[180] = 28
-fontSizes[190] = 30
-fontSizes[200] = 32
-fontSizes[210] = 33
-fontSizes[220] = 35
-fontSizes[230] = 37
-fontSizes[240] = 39
 local npnpua = CreateFrame("Frame")
 MidnightNameplates:RegisterEvent(npnpua, "NAME_PLATE_UNIT_ADDED")
 MidnightNameplates:OnEvent(
@@ -598,14 +600,8 @@ MidnightNameplates:OnEvent(
         local plate = C_NamePlate.GetNamePlateForUnit(unit)
         if plate == nil then return end
         if plate.MINA == nil then return end
-        local fs = fontSizes[MNNP["BARWIDTH"]] or 50
-        local n = MidnightNameplates:ClampText(UnitName(unit) or "?", fs)
         plate.UnitFrame:Hide()
         plate.MINA:Show()
-        if plate.MINA_NAME and plate.MINA_NAME.TEXT then
-            plate.MINA_NAME.TEXT:SetText(n)
-        end
-
         MidnightNameplates:UpdateHealth(plate, unit)
         MidnightNameplates:UpdatePower(plate, unit)
         MidnightNameplates:UpdateDebuffs(plate, unit)
@@ -623,7 +619,21 @@ MidnightNameplates:OnEvent(
                 plate.MINA_HP.TYP:Hide()
             end
         end
+
+        MidnightNameplates:SetName(plate, unit)
     end, "npnpua"
+)
+
+local npunu = CreateFrame("Frame")
+MidnightNameplates:RegisterEvent(npunu, "UNIT_NAME_UPDATE")
+MidnightNameplates:OnEvent(
+    npunu,
+    function(sel, event, unit, ...)
+        local plate = C_NamePlate.GetNamePlateForUnit(unit)
+        if plate == nil then return end
+        if plate.MINA == nil then return end
+        MidnightNameplates:SetName(plate, unit)
+    end, "npunu"
 )
 
 local npnpur = CreateFrame("Frame")

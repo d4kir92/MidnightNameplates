@@ -6,7 +6,7 @@ MNNPSetup:SetScript(
     function(self, event, ...)
         if event == "PLAYER_LOGIN" then
             MNNP = MNNP or {}
-            MidnightNameplates:SetVersion(136142, "0.1.9")
+            MidnightNameplates:SetVersion(136142, "0.1.10")
             MidnightNameplates:SetAddonOutput("MidnightNameplates", 136142)
             MidnightNameplates:AddSlash("mnnp", MidnightNameplates.ToggleSettings)
             MidnightNameplates:AddSlash("MidnightNameplates", MidnightNameplates.ToggleSettings)
