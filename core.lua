@@ -121,7 +121,12 @@ end
 
 local oldTarget = nil
 function MidnightNameplates:UpdateTarget(plate, unit)
-    if not UnitIsUnit(unit, "target") then return end
+    if not UnitIsUnit(unit, "target") then
+        plate.MINA_TARGET.Texture:Hide()
+
+        return
+    end
+
     if oldTarget and oldTarget.MINA_TARGET and oldTarget.MINA_TARGET.Texture then
         oldTarget.MINA_TARGET.Texture:Hide()
     end
