@@ -31,6 +31,15 @@ function MidnightNameplates:SetName(plate, unit)
     end
 end
 
+function MidnightNameplates:UpdateRaidIcon(plate, unit)
+    local u = unit or plate.namePlateUnitToken
+    if GetRaidTargetIndex(u) then
+        plate.RAID.Icon:SetTexture("Interface\\TargetingFrame\\UI-RaidTargetingIcon_" .. GetRaidTargetIndex(u))
+    else
+        plate.RAID.Icon:SetTexture("")
+    end
+end
+
 function MidnightNameplates:WidthBars()
     return widthBars
 end
@@ -495,6 +504,16 @@ function MidnightNameplates:AddUF(np)
             end
 
             if true then
+                MidnightNameplates:AddFrameBar(np, "RAID", MNNP["BARWIDTH"], MNNP["BARHEIGHT"], 40)
+                tinsert(widthBars, np.RAID)
+                tinsert(heightBars, np.RAID)
+                MidnightNameplates:AddTexture(np.RAID, "Icon", nil, "ARTWORK", 3)
+                np.RAID.Icon:SetSize(16, 16)
+                np.RAID.Icon:ClearAllPoints()
+                np.RAID.Icon:SetPoint("BOTTOM", np.RAID, "TOP", 0, -4)
+            end
+
+            if true then
                 MidnightNameplates:AddTexture(np.MINA_CB, "Shield", nil, "ARTWORK", 1)
                 np.MINA_CB.Shield:SetAtlas("ui-castingbar-shield")
                 np.MINA_CB.Shield:SetSize(16, 16)
@@ -626,6 +645,7 @@ MidnightNameplates:OnEvent(
         end
 
         MidnightNameplates:SetName(plate, unit)
+        MidnightNameplates:UpdateRaidIcon(plate, unit)
     end, "npnpua"
 )
 
@@ -707,4 +727,17 @@ MidnightNameplates:OnEvent(
             plate.MINA_CB:SetValue(GetTime() * 1000)
         end
     end, "npsccs"
+)
+
+local nprtu = CreateFrame("Frame")
+MidnightNameplates:RegisterEvent(nprtu, "RAID_TARGET_UPDATE")
+MidnightNameplates:OnEvent(
+    nprtu,
+    function(sel, event, ...)
+        for i, plate in ipairs(C_NamePlate.GetNamePlates()) do
+            if plate and plate.MINA then
+                MidnightNameplates:UpdateRaidIcon(plate)
+            end
+        end
+    end, "nprtu"
 )
