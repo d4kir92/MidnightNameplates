@@ -214,12 +214,19 @@ function MidnightNameplates:UpdateDebuffs(plate, unit)
     until not aura
 end
 
-function MidnightNameplates:UpdateHealth(plate, unit)
-    if UnitSelectionColor then
-        local r, g, b = UnitSelectionColor(unit)
-        plate.MINA_HP:SetStatusBarColor(r, g, b, 1)
+function MidnightNameplates:UpdateStatusColor(plate, unit, from)
+    if UnitIsTapDenied(unit) then
+        plate.MINA_HP:SetStatusBarColor(0.75, 0.75, 0.75, 1)
+    else
+        if UnitSelectionColor then
+            local r, g, b = UnitSelectionColor(unit)
+            plate.MINA_HP:SetStatusBarColor(r, g, b, 1)
+        end
     end
+end
 
+function MidnightNameplates:UpdateHealth(plate, unit)
+    MidnightNameplates:UpdateStatusColor(plate, unit, "UpdateHealth")
     local hp, max = UnitHealth(unit), UnitHealthMax(unit)
     if max == nil or max <= 0 then
         plate.MINA_TARGET:Hide()
@@ -740,4 +747,16 @@ MidnightNameplates:OnEvent(
             end
         end
     end, "nprtu"
+)
+
+local npuf = CreateFrame("Frame")
+MidnightNameplates:RegisterEvent(npuf, "UNIT_FLAGS")
+MidnightNameplates:OnEvent(
+    npuf,
+    function(sel, event, unit, ...)
+        local plate = C_NamePlate.GetNamePlateForUnit(unit)
+        if plate == nil then return end
+        if plate.MINA == nil then return end
+        MidnightNameplates:UpdateStatusColor(plate, unit, "UNIT_FLAGS")
+    end, "npuf"
 )
