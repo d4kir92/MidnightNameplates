@@ -6,7 +6,7 @@ MNNPSetup:SetScript(
     function(self, event, ...)
         if event == "PLAYER_LOGIN" then
             MNNP = MNNP or {}
-            MidnightNameplates:SetVersion(136142, "0.1.13")
+            MidnightNameplates:SetVersion(136142, "0.1.14")
             MidnightNameplates:SetAddonOutput("MidnightNameplates", 136142)
             MidnightNameplates:AddSlash("mina", MidnightNameplates.ToggleSettings)
             MidnightNameplates:AddSlash("mnnp", MidnightNameplates.ToggleSettings)
@@ -49,6 +49,18 @@ end
 
 function MidnightNameplates:InitSettings()
     MNNP = MNNP or {}
+    if MNNP["BARWIDTH"] == nil then
+        MNNP["BARWIDTH"] = 140
+    end
+
+    if MNNP["BARHEIGHT"] == nil then
+        MNNP["BARHEIGHT"] = 9
+    end
+
+    if MNNP["SHOWLEVEL"] == nil then
+        MNNP["SHOWLEVEL"] = true
+    end
+
     if MNNP["POWERBAR"] == nil then
         MNNP["POWERBAR"] = true
     end
@@ -90,7 +102,7 @@ function MidnightNameplates:InitSettings()
     MidnightNameplates:AppendCategory("NAMEPLATE")
     MidnightNameplates:AppendSlider(
         "BARWIDTH",
-        160,
+        140,
         80,
         240,
         10,
@@ -98,6 +110,10 @@ function MidnightNameplates:InitSettings()
         function(sel, val)
             for i, v in ipairs(MidnightNameplates:WidthBars()) do
                 v:SetWidth(val)
+            end
+
+            for i, plate in ipairs(C_NamePlate.GetNamePlates()) do
+                MidnightNameplates:SetName(plate, plate.namePlateUnitToken)
             end
         end, "BARWIDTH"
     )
@@ -117,6 +133,16 @@ function MidnightNameplates:InitSettings()
     )
 
     MidnightNameplates:AppendSlider("MAXDEBUFFS", 5, 1, 9, 1, 0, function(sel, val) end, "MAXDEBUFFS")
+    MidnightNameplates:AppendCheckbox(
+        "SHOWLEVEL",
+        true,
+        function(sel, val)
+            for i, plate in ipairs(C_NamePlate.GetNamePlates()) do
+                MidnightNameplates:SetName(plate, plate.namePlateUnitToken)
+            end
+        end
+    )
+
     MidnightNameplates:AppendCheckbox(
         "POWERBAR",
         true,

@@ -24,11 +24,36 @@ fontSizes[220] = 35
 fontSizes[230] = 37
 fontSizes[240] = 39
 function MidnightNameplates:SetName(plate, unit)
+    local u = unit or plate.namePlateUnitToken
+    if u == nil then return end
+    local name = UnitName(u) or "?"
+    local text = name
     local fs = fontSizes[MNNP["BARWIDTH"]] or 50
-    local n = MidnightNameplates:ClampText(UnitName(unit) or "?", fs)
+    if MNNP["SHOWLEVEL"] then
+        local level = UnitLevel(u)
+        if level ~= nil then
+            color = GetQuestDifficultyColor(level)
+            if level == -1 then
+                level = "??"
+                color.r = 1
+                color.g = 0
+                color.b = 0
+            end
+
+            local hexColor = MidnightNameplates:RGBToHex(color.r, color.g, color.b)
+            text = string.format("[%s%s|r] %s", hexColor, level, name)
+            fs = fs + 12
+        end
+    end
+
+    local n = MidnightNameplates:ClampText(text or "?", fs)
     if plate.MINA_NAME and plate.MINA_NAME.TEXT then
         plate.MINA_NAME.TEXT:SetText(n)
     end
+end
+
+function MidnightNameplates:RGBToHex(r, g, b)
+    return string.format("|cff%02x%02x%02x", color.r * 255, color.g * 255, color.b * 255)
 end
 
 function MidnightNameplates:UpdateRaidIcon(plate, unit)
@@ -759,4 +784,16 @@ MidnightNameplates:OnEvent(
         if plate.MINA == nil then return end
         MidnightNameplates:UpdateStatusColor(plate, unit, "UNIT_FLAGS")
     end, "npuf"
+)
+
+local npul = CreateFrame("Frame")
+MidnightNameplates:RegisterEvent(npul, "UNIT_LEVEL")
+MidnightNameplates:OnEvent(
+    npul,
+    function(sel, event, unit, ...)
+        local plate = C_NamePlate.GetNamePlateForUnit(unit)
+        if plate == nil then return end
+        if plate.MINA == nil then return end
+        MidnightNameplates:SetName(plate, unit)
+    end, "npul"
 )
