@@ -10,3 +10,4 @@ MidnightNameplates:AddTrans("itIT", "LID_MAXDEBUFFS", "Max Debuffs: %d (Default:
 MidnightNameplates:AddTrans("itIT", "LID_POWERBAR", "Power Bar (Mana, Energy, Rage, ...)")
 MidnightNameplates:AddTrans("itIT", "LID_CASTBAR", "Cast Bar")
 MidnightNameplates:AddTrans("itIT", "LID_SHOWLEVEL", "Show Level")
+MidnightNameplates:AddTrans("itIT", "LID_FONTSIZE", "Font Size: %d (Default: 2)")

@@ -10,3 +10,4 @@ MidnightNameplates:AddTrans("deDE", "LID_MAXDEBUFFS", "Max Debuffs: %d (Standard
 MidnightNameplates:AddTrans("deDE", "LID_POWERBAR", "Machtleiste (Mana, Energie, Wut, ...)")
 MidnightNameplates:AddTrans("deDE", "LID_CASTBAR", "Zauberleiste")
 MidnightNameplates:AddTrans("deDE", "LID_SHOWLEVEL", "Level anzeigen")
+MidnightNameplates:AddTrans("deDE", "LID_FONTSIZE", "Schriftgröße: %d (Standard: 2)")

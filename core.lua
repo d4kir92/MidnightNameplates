@@ -5,34 +5,65 @@ local DEBUFF_BACKGROUND = false
 local onlyPlayerDebuffs = true
 local widthBars = {}
 local heightBars = {}
-local fontSizes = {}
-fontSizes[80] = 8
-fontSizes[90] = 11
-fontSizes[100] = 13
-fontSizes[110] = 15
-fontSizes[120] = 17
-fontSizes[130] = 19
-fontSizes[140] = 21
-fontSizes[150] = 23
-fontSizes[160] = 25
-fontSizes[170] = 26
-fontSizes[180] = 28
-fontSizes[190] = 30
-fontSizes[200] = 32
-fontSizes[210] = 33
-fontSizes[220] = 35
-fontSizes[230] = 37
-fontSizes[240] = 39
+local ellipsis = "..."
+local textObjects = {}
+local sizes = {}
+sizes[1] = "SystemFont_Tiny2"
+sizes[2] = "SystemFont_Tiny"
+sizes[3] = "SystemFont_Small"
+sizes[4] = "SystemFont_Small2"
+sizes[5] = "SystemFont_Med1"
+sizes[6] = "SystemFont_Med2"
+sizes[7] = "SystemFont_Med3"
+sizes[8] = "SystemFont_Large"
+sizes[9] = "SystemFont_Huge2"
+sizes[10] = "SystemFont_Huge4"
+sizes[11] = "SystemFont_World" -- NOT WORK
+function MidnightNameplates:SetFontObject(element, size)
+    if sizes[size] then
+        element:SetFontObject(sizes[size])
+    end
+end
+
+function MidnightNameplates:UpdateFontObjects(size)
+    for i, v in pairs(textObjects) do
+        MidnightNameplates:SetFontObject(v, size)
+    end
+end
+
+function MidnightNameplates:TruncateToPixelWidth(fontstring, text, maxWidth)
+    if not text or text == "" then return "" end
+    fontstring:SetText(ellipsis)
+    local ellipsisWidth = fontstring:GetStringWidth()
+    fontstring:SetText("100%")
+    local percentWidth = fontstring:GetStringWidth()
+    fontstring:SetText(text)
+    local maxTextWidth = maxWidth - ellipsisWidth - percentWidth
+    if fontstring:GetStringWidth() <= maxTextWidth then return text end
+    local currentText = text
+    local truncatedText = currentText
+    local len = string.len(currentText)
+    for i = len, 1, -1 do
+        currentText = string.sub(text, 1, i)
+        fontstring:SetText(currentText)
+        if fontstring:GetStringWidth() <= maxTextWidth then
+            truncatedText = currentText .. ellipsis
+            break
+        end
+    end
+
+    return truncatedText
+end
+
 function MidnightNameplates:SetName(plate, unit)
     local u = unit or plate.namePlateUnitToken
     if u == nil then return end
     local name = UnitName(u) or "?"
     local text = name
-    local fs = fontSizes[MNNP["BARWIDTH"]] or 50
     if MNNP["SHOWLEVEL"] then
         local level = UnitLevel(u)
         if level ~= nil then
-            color = GetQuestDifficultyColor(level)
+            local color = GetQuestDifficultyColor(level)
             if level == -1 then
                 level = "??"
                 color.r = 1
@@ -42,18 +73,21 @@ function MidnightNameplates:SetName(plate, unit)
 
             local hexColor = MidnightNameplates:RGBToHex(color.r, color.g, color.b)
             text = string.format("[%s%s|r] %s", hexColor, level, name)
-            fs = fs + 12
         end
     end
 
-    local n = MidnightNameplates:ClampText(text or "?", fs)
+    local n = MidnightNameplates:TruncateToPixelWidth(plate.MINA_NAME.TEXT, text, MNNP["BARWIDTH"])
     if plate.MINA_NAME and plate.MINA_NAME.TEXT then
         plate.MINA_NAME.TEXT:SetText(n)
+        local _, fs = plate.MINA_NAME.TEXT:GetFont()
+        if fs then
+            plate.MINA_NAME:SetHeight(fs)
+        end
     end
 end
 
 function MidnightNameplates:RGBToHex(r, g, b)
-    return string.format("|cff%02x%02x%02x", color.r * 255, color.g * 255, color.b * 255)
+    return string.format("|cff%02x%02x%02x", r * 255, g * 255, b * 255)
 end
 
 function MidnightNameplates:UpdateRaidIcon(plate, unit)
@@ -110,7 +144,10 @@ function MidnightNameplates:AddFontString(parent, name, w, h, r, g, b, fontSize,
     parent[name]:SetSize(w, h)
     parent[name]:SetTextColor(r, g, b)
     parent[name]:SetText("")
-    MidnightNameplates:SetFontSize(parent[name], fontSize)
+    if template == "GameFontNormal" then
+        MidnightNameplates:SetFontObject(parent[name], MNNP["FONTSIZE"])
+        textObjects[parent[name]] = parent[name]
+    end
 end
 
 function MidnightNameplates:AddTexture(parent, name, texture, layer, sublevel)
@@ -124,14 +161,6 @@ function MidnightNameplates:AddTexture(parent, name, texture, layer, sublevel)
     parent[name]:SetTexture(texture)
     parent[name]:SetAllPoints(parent)
     parent[name]:SetDrawLayer(layer, sublevel)
-end
-
-function MidnightNameplates:ClampText(text, max_length)
-    if string.len(text) > max_length then
-        return string.sub(text, 1, max_length) .. "..."
-    else
-        return text
-    end
 end
 
 function MidnightNameplates:FormatTime(sec)
@@ -202,11 +231,9 @@ function MidnightNameplates:UpdateDebuffs(plate, unit)
                 icon.text = icon:CreateFontString(nil, "OVERLAY", "GameFontNormalTiny")
                 icon.text:SetPoint("CENTER", icon, "CENTER", 0, 0)
                 icon.text:SetTextColor(1, 1, 1)
-                MidnightNameplates:SetFontSize(icon.text, 7, "OUTLINE")
                 icon.amount = icon:CreateFontString(nil, "OVERLAY", "GameFontNormalTiny")
                 icon.amount:SetPoint("BOTTOMRIGHT", icon, "BOTTOMRIGHT", 0, 0)
                 icon.amount:SetTextColor(1, 1, 1)
-                MidnightNameplates:SetFontSize(icon.amount, 5, "OUTLINE")
                 icon:ClearAllPoints()
                 if shown == 1 then
                     icon:SetPoint("LEFT", frame, "LEFT", 0, 0)
@@ -270,6 +297,11 @@ function MidnightNameplates:UpdateHealth(plate, unit)
     end
 
     plate.MINA_HPTEXT.TEXT_PER:SetText(string.format("%0.0f%%", hp / max * 100))
+    local _, fs = plate.MINA_HPTEXT.TEXT_PER:GetFont()
+    if fs then
+        plate.MINA_HPTEXT:SetHeight(fs)
+    end
+
     plate.MINA_TARGET:Show()
     plate.MINA_HP.MINA_HP_BR:Show()
     plate.MINA_HP:Show()
@@ -279,6 +311,8 @@ function MidnightNameplates:ShowPowerBar(plate)
     if plate == nil then return end
     if plate.MINA == nil then return end
     if plate.MINA_CB and plate.MINA_CB.unit then
+        plate.MINA_PO:SetAlpha(1)
+        plate.MINA_PO:SetHeight(MNNP["BARHEIGHT"])
         MidnightNameplates:UpdatePower(plate, plate.MINA_CB.unit)
     end
 end
@@ -286,7 +320,8 @@ end
 function MidnightNameplates:HidePowerBar(plate)
     if plate == nil then return end
     if plate.MINA == nil then return end
-    plate.MINA_PO:Hide()
+    plate.MINA_PO:SetAlpha(0)
+    plate.MINA_PO:SetHeight(0.01)
     plate.MINA_PO.MINA_POTEXT.TEXT_CUR:SetText("")
     plate.MINA_PO.MINA_POTEXT.TEXT_PER:SetText("")
 end
@@ -385,17 +420,12 @@ function MidnightNameplates:AddUF(np)
                 MidnightNameplates:AddFrameBar(np, "MINA_HPTEXT", MNNP["BARWIDTH"], MNNP["BARHEIGHT"], 30)
                 tinsert(widthBars, np.MINA_HPTEXT)
                 tinsert(heightBars, np.MINA_HPTEXT)
-                MidnightNameplates:AddFontString(np.MINA_HPTEXT, "TEXT_CUR", MNNP["BARWIDTH"], 9, 1, 1, 1, 9, "OVERLAY", "GameFontNormalSmall")
+                MidnightNameplates:AddFontString(np.MINA_HPTEXT, "TEXT_CUR", MNNP["BARWIDTH"], 9, 1, 1, 1, 9, "OVERLAY", "GameFontNormal")
                 tinsert(widthBars, np.MINA_HPTEXT.TEXT_CUR)
                 np.MINA_HPTEXT.TEXT_CUR:SetJustifyH("RIGHT")
-                MidnightNameplates:AddFontString(np.MINA_HPTEXT, "TEXT_PER", MNNP["BARWIDTH"], 9, 1, 1, 1, 9, "OVERLAY", "GameFontNormalSmall")
+                MidnightNameplates:AddFontString(np.MINA_HPTEXT, "TEXT_PER", MNNP["BARWIDTH"], 9, 1, 1, 1, 9, "OVERLAY", "GameFontNormal")
                 tinsert(widthBars, np.MINA_HPTEXT.TEXT_PER)
                 np.MINA_HPTEXT.TEXT_PER:SetJustifyH("RIGHT")
-                if true then
-                    np.MINA_HPTEXT.TEXT_PER:SetPoint("BOTTOMRIGHT", np.MINA_HPTEXT, "TOPRIGHT", 0, -1)
-                else
-                    np.MINA_HPTEXT.TEXT_PER:SetPoint("RIGHT", np.MINA_HPTEXT, "RIGHT", 0, 0)
-                end
             end
 
             if true then
@@ -437,11 +467,11 @@ function MidnightNameplates:AddUF(np)
             if true then
                 MidnightNameplates:AddFrameBar(np.MINA_PO, "MINA_POTEXT", MNNP["BARWIDTH"], 9, 30)
                 tinsert(widthBars, np.MINA_PO.MINA_POTEXT)
-                MidnightNameplates:AddFontString(np.MINA_PO.MINA_POTEXT, "TEXT_CUR", MNNP["BARWIDTH"], 9, 1, 1, 1, 7, "OVERLAY", "GameFontNormalSmall")
+                MidnightNameplates:AddFontString(np.MINA_PO.MINA_POTEXT, "TEXT_CUR", MNNP["BARWIDTH"], 9, 1, 1, 1, 7, "OVERLAY", "SystemFont_Tiny")
                 tinsert(widthBars, np.MINA_PO.TEXT_CUR)
                 np.MINA_PO.MINA_POTEXT.TEXT_CUR:SetJustifyH("LEFT")
                 np.MINA_PO.MINA_POTEXT.TEXT_CUR:SetPoint("LEFT", np.MINA_POTEXT, "LEFT", 4, 0)
-                MidnightNameplates:AddFontString(np.MINA_PO.MINA_POTEXT, "TEXT_PER", MNNP["BARWIDTH"], 9, 1, 1, 1, 7, "OVERLAY", "GameFontNormalSmall")
+                MidnightNameplates:AddFontString(np.MINA_PO.MINA_POTEXT, "TEXT_PER", MNNP["BARWIDTH"], 9, 1, 1, 1, 7, "OVERLAY", "SystemFont_Tiny")
                 tinsert(widthBars, np.MINA_PO.TEXT_PER)
                 np.MINA_PO.MINA_POTEXT.TEXT_PER:SetJustifyH("RIGHT")
                 np.MINA_PO.MINA_POTEXT.TEXT_PER:SetPoint("RIGHT", np.MINA_PO.MINA_POTEXT, "RIGHT", -4, 0)
@@ -525,11 +555,11 @@ function MidnightNameplates:AddUF(np)
             if true then
                 MidnightNameplates:AddFrameBar(np.MINA_CB, "MINA_CBTEXT", MNNP["BARWIDTH"], 9, 30)
                 tinsert(widthBars, np.MINA_CB.MINA_CBTEXT)
-                MidnightNameplates:AddFontString(np.MINA_CB.MINA_CBTEXT, "TEXT_CUR", MNNP["BARWIDTH"], 9, 1, 1, 1, 7, "OVERLAY", "GameFontNormalSmall")
+                MidnightNameplates:AddFontString(np.MINA_CB.MINA_CBTEXT, "TEXT_CUR", MNNP["BARWIDTH"], 9, 1, 1, 1, 7, "OVERLAY", "SystemFont_Tiny")
                 tinsert(widthBars, np.MINA_CB.TEXT_CUR)
                 np.MINA_CB.MINA_CBTEXT.TEXT_CUR:SetJustifyH("RIGHT")
                 np.MINA_CB.MINA_CBTEXT.TEXT_CUR:SetPoint("RIGHT", np.MINA_CB.MINA_CBTEXT, "RIGHT", -4, 0)
-                MidnightNameplates:AddFontString(np.MINA_CB.MINA_CBTEXT, "TEXT_NAME", MNNP["BARWIDTH"], 9, 1, 1, 1, 7, "OVERLAY", "GameFontNormalSmall")
+                MidnightNameplates:AddFontString(np.MINA_CB.MINA_CBTEXT, "TEXT_NAME", MNNP["BARWIDTH"], 9, 1, 1, 1, 7, "OVERLAY", "SystemFont_Tiny")
                 tinsert(widthBars, np.MINA_CB.MINA_CBTEXT.TEXT_NAME)
                 np.MINA_CB.MINA_CBTEXT.TEXT_NAME:SetJustifyH("CENTER")
                 np.MINA_CB.MINA_CBTEXT.TEXT_NAME:SetPoint("CENTER", np.MINA_CB.MINA_CBTEXT, "CENTER", 0, 0)
@@ -567,16 +597,22 @@ function MidnightNameplates:AddUF(np)
         if NAME then
             MidnightNameplates:AddFrameBar(np, "MINA_NAME", MNNP["BARWIDTH"], MNNP["BARHEIGHT"], 30)
             tinsert(widthBars, np.MINA_NAME)
-            tinsert(heightBars, np.MINA_NAME)
-            MidnightNameplates:AddFontString(np.MINA_NAME, "TEXT", MNNP["BARWIDTH"], 9, 1, 1, 1, 9, "OVERLAY", "GameFontNormalSmall")
+            MidnightNameplates:AddFontString(np.MINA_NAME, "TEXT", MNNP["BARWIDTH"], 9, 1, 1, 1, 9, "OVERLAY", "GameFontNormal")
             tinsert(widthBars, np.MINA_NAME.TEXT)
             np.MINA_NAME.TEXT:SetJustifyH("LEFT")
             np.MINA_NAME.TEXT:ClearAllPoints()
-            if true then
-                np.MINA_NAME.TEXT:SetPoint("BOTTOMLEFT", np.MINA_NAME, "TOPLEFT", 0, -1)
-            else
-                np.MINA_NAME.TEXT:SetPoint("LEFT", np.MINA_NAME, "LEFT", 0, 0)
-            end
+        end
+
+        if true then
+            np.MINA_NAME.TEXT:SetPoint("BOTTOMLEFT", np.MINA_NAME, "TOPLEFT", 0, -1)
+        else
+            np.MINA_NAME.TEXT:SetPoint("LEFT", np.MINA_NAME, "LEFT", 0, 0)
+        end
+
+        if true then
+            np.MINA_HPTEXT.TEXT_PER:SetPoint("BOTTOMRIGHT", np.MINA_NAME, "TOPRIGHT", 0, -1)
+        else
+            np.MINA_HPTEXT.TEXT_PER:SetPoint("RIGHT", np.MINA_HPTEXT, "RIGHT", 0, 0)
         end
 
         -- DEBUFFS

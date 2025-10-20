@@ -10,3 +10,4 @@ MidnightNameplates:AddTrans("ruRU", "LID_MAXDEBUFFS", "Max Debuffs: %d (Default:
 MidnightNameplates:AddTrans("ruRU", "LID_POWERBAR", "Power Bar (Mana, Energy, Rage, ...)")
 MidnightNameplates:AddTrans("ruRU", "LID_CASTBAR", "Cast Bar")
 MidnightNameplates:AddTrans("ruRU", "LID_SHOWLEVEL", "Show Level")
+MidnightNameplates:AddTrans("ruRU", "LID_FONTSIZE", "Font Size: %d (Default: 2)")

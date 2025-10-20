@@ -10,3 +10,4 @@ MidnightNameplates:AddTrans("esES", "LID_MAXDEBUFFS", "Max Debuffs: %d (Default:
 MidnightNameplates:AddTrans("esES", "LID_POWERBAR", "Power Bar (Mana, Energy, Rage, ...)")
 MidnightNameplates:AddTrans("esES", "LID_CASTBAR", "Cast Bar")
 MidnightNameplates:AddTrans("esES", "LID_SHOWLEVEL", "Show Level")
+MidnightNameplates:AddTrans("esES", "LID_FONTSIZE", "Font Size: %d (Default: 2)")

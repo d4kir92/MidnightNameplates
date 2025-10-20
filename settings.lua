@@ -6,7 +6,7 @@ MNNPSetup:SetScript(
     function(self, event, ...)
         if event == "PLAYER_LOGIN" then
             MNNP = MNNP or {}
-            MidnightNameplates:SetVersion(136142, "0.1.14")
+            MidnightNameplates:SetVersion(136142, "0.1.15")
             MidnightNameplates:SetAddonOutput("MidnightNameplates", 136142)
             MidnightNameplates:AddSlash("mina", MidnightNameplates.ToggleSettings)
             MidnightNameplates:AddSlash("mnnp", MidnightNameplates.ToggleSettings)
@@ -70,6 +70,7 @@ function MidnightNameplates:InitSettings()
     end
 
     MNNP["MAXDEBUFFS"] = MNNP["MAXDEBUFFS"] or 5
+    MNNP["FONTSIZE"] = MNNP["FONTSIZE"] or 2
     mn_settings = MidnightNameplates:CreateWindow(
         {
             ["name"] = "MidnightNameplates",
@@ -128,6 +129,21 @@ function MidnightNameplates:InitSettings()
         function(sel, val)
             for i, v in ipairs(MidnightNameplates:HeightBars()) do
                 v:SetHeight(val)
+            end
+        end, "BARHEIGHT"
+    )
+
+    MidnightNameplates:AppendSlider(
+        "FONTSIZE",
+        2,
+        1,
+        10,
+        1,
+        0,
+        function(sel, val)
+            MidnightNameplates:UpdateFontObjects(val)
+            for i, plate in ipairs(C_NamePlate.GetNamePlates()) do
+                MidnightNameplates:SetName(plate, plate.namePlateUnitToken)
             end
         end, "BARHEIGHT"
     )
