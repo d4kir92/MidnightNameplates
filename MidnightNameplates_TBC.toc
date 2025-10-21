@@ -3,7 +3,7 @@
 ## Title: M|cff3FC7EBidnight|rN|cff3FC7EBameplates|r |T136142:16:16:0:0|t by |cff3FC7EBD4KiR |T132115:16:16:0:0|t
 ## Notes: An add-on that replaces the default nameplates with midnight-like nameplates.
 ## Notes-deDE: Ein Add-on das die Standard-Namensplaketten mit Midnight-ähnlichen Namensplaketten ersetzt.
-## Notes-ruRU: An add-on that replaces the default nameplates with midnight-like nameplates.
+## Notes-ruRU: Заменяет стандартные индикаторы здоровья на индикаторы, соответствующие дополнению 'Полночь'.
 ## Author: D|cff3FC7EB4KiR |T132115:16:16:0:0|t
 ## Category: D|cff3FC7EB4KiR |T132115:16:16:0:0|t
 ## X-Category: D|cff3FC7EB4KiR |T132115:16:16:0:0|t
