@@ -19,6 +19,17 @@ sizes[8] = "SystemFont_Large"
 sizes[9] = "SystemFont_Huge2"
 sizes[10] = "SystemFont_Huge4"
 sizes[11] = "SystemFont_World" -- NOT WORK
+function MidnightNameplates:HideDefault(plate)
+    if plate == nil then return end
+    if plate.UnitFrame == nil then return end
+    plate.UnitFrame:Hide()
+    plate.UnitFrame:SetAlpha(0)
+    if ClassNameplateManaBarFrame then
+        ClassNameplateManaBarFrame:Hide()
+        ClassNameplateManaBarFrame:SetAlpha(0)
+    end
+end
+
 function MidnightNameplates:SetFontObject(element, size)
     if sizes[size] then
         element:SetFontObject(sizes[size])
@@ -665,6 +676,7 @@ MidnightNameplates:OnEvent(
         local plate = C_NamePlate.GetNamePlateForUnit(unit)
         if plate == nil then return end
         if plate.MINA == nil then return end
+        MidnightNameplates:HideDefault(plate)
         MidnightNameplates:UpdateHealth(plate, unit)
     end, "npuh"
 )
@@ -680,6 +692,7 @@ MidnightNameplates:OnEvent(
         local plate = C_NamePlate.GetNamePlateForUnit(unit)
         if plate == nil then return end
         if plate.MINA == nil then return end
+        MidnightNameplates:HideDefault(plate)
         MidnightNameplates:UpdatePower(plate, unit)
     end, "npup"
 )
@@ -692,7 +705,7 @@ MidnightNameplates:OnEvent(
         local plate = C_NamePlate.GetNamePlateForUnit(unit)
         if plate == nil then return end
         if plate.MINA == nil then return end
-        plate.UnitFrame:Hide()
+        MidnightNameplates:HideDefault(plate)
         plate.MINA:Show()
         MidnightNameplates:UpdateHealth(plate, unit)
         MidnightNameplates:UpdatePower(plate, unit)
@@ -725,6 +738,7 @@ MidnightNameplates:OnEvent(
         local plate = C_NamePlate.GetNamePlateForUnit(unit)
         if plate == nil then return end
         if plate.MINA == nil then return end
+        MidnightNameplates:HideDefault(plate)
         MidnightNameplates:SetName(plate, unit)
     end, "npunu"
 )
@@ -737,6 +751,7 @@ MidnightNameplates:OnEvent(
         local plate = C_NamePlate.GetNamePlateForUnit(unit)
         if plate == nil then return end
         if plate.MINA == nil then return end
+        MidnightNameplates:HideDefault(plate)
         plate.MINA:Hide()
     end, "npnpur"
 )
@@ -804,6 +819,7 @@ MidnightNameplates:OnEvent(
     function(sel, event, ...)
         for i, plate in ipairs(C_NamePlate.GetNamePlates()) do
             if plate and plate.MINA then
+                MidnightNameplates:HideDefault(plate)
                 MidnightNameplates:UpdateRaidIcon(plate)
             end
         end
