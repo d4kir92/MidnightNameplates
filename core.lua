@@ -323,7 +323,6 @@ function MidnightNameplates:ShowPowerBar(plate)
     if plate.MINA == nil then return end
     if plate.MINA_CB and plate.MINA_CB.unit then
         plate.MINA_PO:SetAlpha(1)
-        MidnightNameplates:UpdatePower(plate, plate.MINA_CB.unit)
     end
 end
 
@@ -361,7 +360,7 @@ function MidnightNameplates:UpdatePower(plate, unit)
     plate.MINA_PO:SetValue(po)
     plate.MINA_PO.MINA_POTEXT.TEXT_CUR:SetText(string.format("%d", po))
     plate.MINA_PO.MINA_POTEXT.TEXT_PER:SetText(string.format("%0.0f%%", po / max * 100))
-    plate.MINA_PO:Show()
+    MidnightNameplates:ShowPowerBar(plate)
 end
 
 function MidnightNameplates:ShowCastBar(plate)
@@ -550,7 +549,7 @@ function MidnightNameplates:AddUF(np)
             )
 
             if true then
-                np.MINA_CB:SetStatusBarTexture("Interface\\AddOns\\MidnightNameplates\\media\\bar-fill")
+                np.MINA_CB:SetStatusBarTexture("Interface\\AddOns\\MidnightNameplates\\media\\bar1")
                 np.MINA_CB:SetStatusBarColor(1, 1, 0, 1)
                 np.MINA_CB:GetStatusBarTexture():SetMask("Interface\\AddOns\\MidnightNameplates\\media\\bar-mask")
                 np.MINA_CB:GetStatusBarTexture():SetHorizTile(false)

@@ -166,6 +166,7 @@ function MidnightNameplates:InitSettings()
             for i, plate in ipairs(C_NamePlate.GetNamePlates()) do
                 if val then
                     MidnightNameplates:ShowPowerBar(plate)
+                    MidnightNameplates:UpdatePower(plate, plate.MINA_CB.unit)
                 else
                     MidnightNameplates:HidePowerBar(plate)
                 end
