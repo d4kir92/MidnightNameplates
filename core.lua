@@ -159,6 +159,9 @@ function MidnightNameplates:AddFontString(parent, name, w, h, r, g, b, fontSize,
         MidnightNameplates:SetFontObject(parent[name], MNNP["FONTSIZE"])
         textObjects[parent[name]] = parent[name]
     end
+
+    parent[name]:SetShadowColor(0, 0, 0, 1)
+    parent[name]:SetShadowOffset(1, -1)
 end
 
 function MidnightNameplates:AddTexture(parent, name, texture, layer, sublevel)
@@ -193,9 +196,7 @@ function MidnightNameplates:IconOnUpdate(sel, elapsed)
     end
 end
 
-local oldTarget = nil
-function MidnightNameplates:UpdateTarget(plate, unit)
-    if plate == nil then return end
+function MidnightNameplates:UpdateArrows(plate)
     if not MNNP["TARGETARROWS"] then
         plate.MINA_TARGET.IconL:Hide()
         plate.MINA_TARGET.IconR:Hide()
@@ -203,19 +204,26 @@ function MidnightNameplates:UpdateTarget(plate, unit)
         plate.MINA_TARGET.IconL:Show()
         plate.MINA_TARGET.IconR:Show()
     end
+end
 
+local oldTarget = nil
+function MidnightNameplates:UpdateTarget(plate, unit, event)
     if not UnitIsUnit(unit, "target") then
         plate.MINA_TARGET:Hide()
+        MidnightNameplates:UpdateArrows(plate)
 
         return
     end
 
     if oldTarget and oldTarget.MINA_TARGET and oldTarget.MINA_TARGET then
         oldTarget.MINA_TARGET:Hide()
+        MidnightNameplates:UpdateArrows(oldTarget)
     end
 
+    if unit == nil then return end
     if not plate or not plate.MINA_TARGET or not plate.MINA_TARGET then return end
     plate.MINA_TARGET:Show()
+    MidnightNameplates:UpdateArrows(plate)
     oldTarget = plate
 end
 
@@ -301,7 +309,6 @@ function MidnightNameplates:UpdateHealth(plate, unit)
     MidnightNameplates:UpdateStatusColor(plate, unit, "UpdateHealth")
     local hp, max = UnitHealth(unit), UnitHealthMax(unit)
     if max == nil or max <= 0 then
-        plate.MINA_TARGET:Hide()
         plate.MINA_HP.MINA_HP_BR:Hide()
         plate.MINA_HP:Hide()
         plate.MINA_HPTEXT.TEXT_CUR:SetText("")
@@ -322,7 +329,6 @@ function MidnightNameplates:UpdateHealth(plate, unit)
         plate.MINA_HPTEXT:SetHeight(fs)
     end
 
-    plate.MINA_TARGET:Show()
     plate.MINA_HP.MINA_HP_BR:Show()
     plate.MINA_HP:Show()
 end
@@ -449,6 +455,8 @@ function MidnightNameplates:AddUF(np)
                     np.MINA_TARGET.IconR:ClearAllPoints()
                     np.MINA_TARGET.IconR:SetPoint("LEFT", np.MINA_TARGET, "RIGHT", 2, 0)
                 end
+
+                np.MINA_TARGET:Hide()
             end
 
             if true then
@@ -734,7 +742,7 @@ MidnightNameplates:OnEvent(
         MidnightNameplates:UpdateHealth(plate, unit)
         MidnightNameplates:UpdatePower(plate, unit)
         MidnightNameplates:UpdateDebuffs(plate, unit)
-        MidnightNameplates:UpdateTarget(plate, unit)
+        MidnightNameplates:UpdateTarget(plate, unit, event)
         plate.MINA_CB.unit = unit
         if plate.MINA_HP then
             local classification = UnitClassification(unit)
@@ -786,7 +794,7 @@ MidnightNameplates:OnEvent(
     npptc,
     function(sel, event, ...)
         local plate = C_NamePlate.GetNamePlateForUnit("target")
-        MidnightNameplates:UpdateTarget(plate, "target")
+        MidnightNameplates:UpdateTarget(plate, "target", event)
     end, "npptc"
 )
 
