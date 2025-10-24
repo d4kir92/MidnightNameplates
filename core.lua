@@ -332,7 +332,10 @@ function MidnightNameplates:HidePowerBar(plate)
     if plate == nil then return end
     if plate.MINA == nil then return end
     plate.MINA_PO:SetAlpha(0)
-    plate.MINA_PO:SetHeight(0.01)
+    if not MNNP["POWERBAR"] then
+        plate.MINA_PO:SetHeight(0.01)
+    end
+
     plate.MINA_PO.MINA_POTEXT.TEXT_CUR:SetText("")
     plate.MINA_PO.MINA_POTEXT.TEXT_PER:SetText("")
 end
