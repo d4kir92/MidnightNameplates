@@ -387,7 +387,7 @@ function MidnightNameplates:ShowCastBar(plate)
             if plate.MINA_PO:GetAlpha() > 0 then
                 plate.MINA_PO:SetHeight(MNNP["BARHEIGHT"])
             else
-                plate.MINA_PO:SetHeight(0.01)
+                plate.MINA_PO:SetHeight(1)
             end
 
             plate.MINA_CB:Show()
