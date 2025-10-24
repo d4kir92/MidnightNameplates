@@ -195,18 +195,27 @@ end
 
 local oldTarget = nil
 function MidnightNameplates:UpdateTarget(plate, unit)
+    if plate == nil then return end
+    if not MNNP["TARGETARROWS"] then
+        plate.MINA_TARGET.IconL:Hide()
+        plate.MINA_TARGET.IconR:Hide()
+    else
+        plate.MINA_TARGET.IconL:Show()
+        plate.MINA_TARGET.IconR:Show()
+    end
+
     if not UnitIsUnit(unit, "target") then
-        plate.MINA_TARGET.Texture:Hide()
+        plate.MINA_TARGET:Hide()
 
         return
     end
 
-    if oldTarget and oldTarget.MINA_TARGET and oldTarget.MINA_TARGET.Texture then
-        oldTarget.MINA_TARGET.Texture:Hide()
+    if oldTarget and oldTarget.MINA_TARGET and oldTarget.MINA_TARGET then
+        oldTarget.MINA_TARGET:Hide()
     end
 
-    if not plate or not plate.MINA_TARGET or not plate.MINA_TARGET.Texture then return end
-    plate.MINA_TARGET.Texture:Show()
+    if not plate or not plate.MINA_TARGET or not plate.MINA_TARGET then return end
+    plate.MINA_TARGET:Show()
     oldTarget = plate
 end
 
@@ -427,7 +436,19 @@ function MidnightNameplates:AddUF(np)
                 tinsert(widthBars, np.MINA_TARGET)
                 tinsert(heightBars, np.MINA_TARGET)
                 MidnightNameplates:AddTexture(np.MINA_TARGET, "Texture", "Interface\\AddOns\\MidnightNameplates\\media\\bar-target", "OVERLAY")
-                np.MINA_TARGET.Texture:Hide()
+                if true then
+                    MidnightNameplates:AddTexture(np.MINA_TARGET, "IconL", "Interface\\AddOns\\MidnightNameplates\\media\\arrowright", "ARTWORK", 2)
+                    np.MINA_TARGET.IconL:SetSize(20, 20)
+                    np.MINA_TARGET.IconL:ClearAllPoints()
+                    np.MINA_TARGET.IconL:SetPoint("RIGHT", np.MINA_TARGET, "LEFT", -2, 0)
+                end
+
+                if true then
+                    MidnightNameplates:AddTexture(np.MINA_TARGET, "IconR", "Interface\\AddOns\\MidnightNameplates\\media\\arrowleft", "ARTWORK", 2)
+                    np.MINA_TARGET.IconR:SetSize(20, 20)
+                    np.MINA_TARGET.IconR:ClearAllPoints()
+                    np.MINA_TARGET.IconR:SetPoint("LEFT", np.MINA_TARGET, "RIGHT", 2, 0)
+                end
             end
 
             if true then

@@ -11,3 +11,4 @@ MidnightNameplates:AddTrans("zhCN", "LID_POWERBAR", "Power Bar (Mana, Energy, Ra
 MidnightNameplates:AddTrans("zhCN", "LID_CASTBAR", "Cast Bar")
 MidnightNameplates:AddTrans("zhCN", "LID_SHOWLEVEL", "Show Level")
 MidnightNameplates:AddTrans("zhCN", "LID_FONTSIZE", "Font Size: %d (Default: 2)")
+MidnightNameplates:AddTrans("zhCN", "LID_TARGETARROWS", "Target Arrows")

@@ -11,3 +11,4 @@ MidnightNameplates:AddTrans("itIT", "LID_POWERBAR", "Power Bar (Mana, Energy, Ra
 MidnightNameplates:AddTrans("itIT", "LID_CASTBAR", "Cast Bar")
 MidnightNameplates:AddTrans("itIT", "LID_SHOWLEVEL", "Show Level")
 MidnightNameplates:AddTrans("itIT", "LID_FONTSIZE", "Font Size: %d (Default: 2)")
+MidnightNameplates:AddTrans("itIT", "LID_TARGETARROWS", "Target Arrows")

@@ -11,3 +11,4 @@ MidnightNameplates:AddTrans("ruRU", "LID_POWERBAR", "Панель силы (ма
 MidnightNameplates:AddTrans("ruRU", "LID_CASTBAR", "Полоса применения заклинаний")
 MidnightNameplates:AddTrans("ruRU", "LID_SHOWLEVEL", "Показать уровень")
 MidnightNameplates:AddTrans("ruRU", "LID_FONTSIZE", "Размер шрифта: %d (по умолчанию: 2)")
+MidnightNameplates:AddTrans("ruRU", "LID_TARGETARROWS", "Target Arrows")

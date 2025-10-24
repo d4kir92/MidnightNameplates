@@ -11,3 +11,4 @@ MidnightNameplates:AddTrans("deDE", "LID_POWERBAR", "Machtleiste (Mana, Energie,
 MidnightNameplates:AddTrans("deDE", "LID_CASTBAR", "Zauberleiste")
 MidnightNameplates:AddTrans("deDE", "LID_SHOWLEVEL", "Level anzeigen")
 MidnightNameplates:AddTrans("deDE", "LID_FONTSIZE", "Schriftgröße: %d (Standard: 2)")
+MidnightNameplates:AddTrans("deDE", "LID_TARGETARROWS", "Ziel Pfeile")

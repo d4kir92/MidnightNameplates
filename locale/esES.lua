@@ -11,3 +11,4 @@ MidnightNameplates:AddTrans("esES", "LID_POWERBAR", "Power Bar (Mana, Energy, Ra
 MidnightNameplates:AddTrans("esES", "LID_CASTBAR", "Cast Bar")
 MidnightNameplates:AddTrans("esES", "LID_SHOWLEVEL", "Show Level")
 MidnightNameplates:AddTrans("esES", "LID_FONTSIZE", "Font Size: %d (Default: 2)")
+MidnightNameplates:AddTrans("esES", "LID_TARGETARROWS", "Target Arrows")

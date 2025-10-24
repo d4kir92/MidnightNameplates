@@ -69,6 +69,10 @@ function MidnightNameplates:InitSettings()
         MNNP["CASTBAR"] = true
     end
 
+    if MNNP["TARGETARROWS"] == nil then
+        MNNP["TARGETARROWS"] = false
+    end
+
     MNNP["MAXDEBUFFS"] = MNNP["MAXDEBUFFS"] or 5
     MNNP["FONTSIZE"] = MNNP["FONTSIZE"] or 2
     mn_settings = MidnightNameplates:CreateWindow(
@@ -183,6 +187,26 @@ function MidnightNameplates:InitSettings()
                     MidnightNameplates:ShowCastBar(plate)
                 else
                     MidnightNameplates:HideCastBar(plate)
+                end
+            end
+        end
+    )
+
+    MidnightNameplates:AppendCheckbox(
+        "TARGETARROWS",
+        true,
+        function(sel, val)
+            for i, plate in ipairs(C_NamePlate.GetNamePlates()) do
+                if plate and plate.MINA_TARGET then
+                    if not val then
+                        plate.MINA_TARGET.IconL:Hide()
+                        plate.MINA_TARGET.IconR:Hide()
+                    else
+                        if plate.MINA_TARGET:IsShown() then
+                            plate.MINA_TARGET.IconL:Show()
+                            plate.MINA_TARGET.IconR:Show()
+                        end
+                    end
                 end
             end
         end

@@ -11,3 +11,4 @@ MidnightNameplates:AddTrans("frFR", "LID_POWERBAR", "Power Bar (Mana, Energy, Ra
 MidnightNameplates:AddTrans("frFR", "LID_CASTBAR", "Cast Bar")
 MidnightNameplates:AddTrans("frFR", "LID_SHOWLEVEL", "Show Level")
 MidnightNameplates:AddTrans("frFR", "LID_FONTSIZE", "Font Size: %d (Default: 2)")
+MidnightNameplates:AddTrans("frFR", "LID_TARGETARROWS", "Target Arrows")
