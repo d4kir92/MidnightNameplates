@@ -461,7 +461,7 @@ function MidnightNameplates:AddUF(np)
             np.MINA_PO:ClearAllPoints()
             np.MINA_PO:SetPoint("TOP", np.MINA_HP, "BOTTOM", 0, 0)
             if true then
-                np.MINA_PO:SetStatusBarTexture("Interface\\AddOns\\MidnightNameplates\\media\\bar-fill")
+                np.MINA_PO:SetStatusBarTexture("Interface\\AddOns\\MidnightNameplates\\media\\bar1")
                 np.MINA_PO:SetStatusBarColor(1, 0, 0, 1)
                 np.MINA_PO:GetStatusBarTexture():SetMask("Interface\\AddOns\\MidnightNameplates\\media\\bar-mask")
                 np.MINA_PO:GetStatusBarTexture():SetHorizTile(false)
