@@ -339,12 +339,15 @@ function MidnightNameplates:ShowPowerBar(plate)
     if plate.MINA_CB and plate.MINA_CB.unit then
         plate.MINA_PO:SetAlpha(1)
     end
+
+    plate.MINA_PO:SetHeight(MNNP["BARHEIGHT"])
 end
 
 function MidnightNameplates:HidePowerBar(plate)
     if plate == nil then return end
     if plate.MINA == nil then return end
     plate.MINA_PO:SetAlpha(0)
+    plate.MINA_PO:SetHeight(0)
     plate.MINA_PO.MINA_POTEXT.TEXT_CUR:SetText("")
     plate.MINA_PO.MINA_POTEXT.TEXT_PER:SetText("")
 end
@@ -384,10 +387,10 @@ function MidnightNameplates:ShowCastBar(plate)
     if plate.MINA_CB and plate.MINA_CB.unit then
         local spell, _, _, startTime, endTime = UnitCastingInfo(plate.MINA_CB.unit)
         if spell then
-            if plate.MINA_PO:GetAlpha() > 0 then
+            if MNNP["POWERBAR"] and plate.MINA_PO:GetAlpha() > 0 then
                 plate.MINA_PO:SetHeight(MNNP["BARHEIGHT"])
             else
-                plate.MINA_PO:SetHeight(1)
+                plate.MINA_PO:SetHeight(0)
             end
 
             plate.MINA_CB:Show()
@@ -740,8 +743,8 @@ MidnightNameplates:OnEvent(
         MidnightNameplates:HideDefault(plate)
         plate.MINA:Show()
         MidnightNameplates:UpdateHealth(plate, unit)
-        MidnightNameplates:UpdatePower(plate, unit)
         MidnightNameplates:UpdateDebuffs(plate, unit)
+        MidnightNameplates:UpdatePower(plate, unit)
         MidnightNameplates:UpdateTarget(plate, unit, event)
         plate.MINA_CB.unit = unit
         if plate.MINA_HP then
@@ -772,6 +775,7 @@ MidnightNameplates:OnEvent(
         if plate.MINA == nil then return end
         MidnightNameplates:HideDefault(plate)
         MidnightNameplates:SetName(plate, unit)
+        MidnightNameplates:UpdatePower(plate, unit)
     end, "npunu"
 )
 
