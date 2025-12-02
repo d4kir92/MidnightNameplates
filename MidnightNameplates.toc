@@ -3,9 +3,9 @@
 ## Interface-Wrath: 30300, 30403
 ## Interface-Cata: 40402
 ## Interface-Mists: 50502
-## Interface: 110205
+## Interface: 110205, 110207, 120000
 
-## Version: 0.1.25
+## Version: 0.1.26
 ## Title: M|cff3FC7EBidnight|rN|cff3FC7EBameplates|r |T136142:16:16:0:0|t by |cff3FC7EBD4KiR |T132115:16:16:0:0|t
 ## Notes: An add-on that replaces the default nameplates with midnight-like nameplates.
 ## Notes-deDE: Ein Add-on das die Standard-Namensplaketten mit Midnight-ähnlichen Namensplaketten ersetzt.
