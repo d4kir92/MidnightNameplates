@@ -6,7 +6,7 @@ MNNPSetup:SetScript(
     function(self, event, ...)
         if event == "PLAYER_LOGIN" then
             MNNP = MNNP or {}
-            MidnightNameplates:SetVersion(136142, "0.1.33")
+            MidnightNameplates:SetVersion(136142, "0.1.34")
             MidnightNameplates:SetAddonOutput("MidnightNameplates", 136142)
             MidnightNameplates:AddSlash("mina", MidnightNameplates.ToggleSettings)
             MidnightNameplates:AddSlash("mnnp", MidnightNameplates.ToggleSettings)
@@ -18,7 +18,7 @@ MNNPSetup:SetScript(
                     ["icon"] = 136142,
                     ["var"] = mmbtn,
                     ["dbtab"] = MNNP,
-                    ["vTT"] = {{"M|cff3FC7EBidnight|rN|cff3FC7EBameplates|r", "v|cff3FC7EB" .. MidnightNameplates:GetVersion()}, {MidnightNameplates:Trans("LID_LEFTCLICK"), MidnightNameplates:Trans("LID_OPENSETTINGS")}, {MidnightNameplates:Trans("LID_RIGHTCLICK"), MidnightNameplates:Trans("LID_HIDEMINIMAPBUTTON")}},
+                    ["vTT"] = {{"MidnightNameplates", "v" .. MidnightNameplates:GetVersion()}, {MidnightNameplates:Trans("LID_LEFTCLICK"), MidnightNameplates:Trans("LID_OPENSETTINGS")}, {MidnightNameplates:Trans("LID_RIGHTCLICK"), MidnightNameplates:Trans("LID_HIDEMINIMAPBUTTON")}},
                     ["funcL"] = function()
                         MidnightNameplates:ToggleSettings()
                     end,
@@ -81,7 +81,7 @@ function MidnightNameplates:InitSettings()
             ["pTab"] = {"CENTER"},
             ["sw"] = 520,
             ["sh"] = 520,
-            ["title"] = format("M|cff3FC7EBidnight|rN|cff3FC7EBameplates|r v|cff3FC7EB%s", MidnightNameplates:GetVersion())
+            ["title"] = format("MidnightNameplates v%s", MidnightNameplates:GetVersion())
         }
     )
 
