@@ -1,5 +1,5 @@
 ## Interface: 20505
-## Version: 0.1.37
+## Version: 0.1.38
 ## Title: MidnightNameplates |T136142:16:16:0:0|t by |cff55d2ffD4KiR |T132115:16:16:0:0|t
 ## Notes: An add-on that replaces the default nameplates with midnight-like nameplates.
 ## Notes-deDE: Ein Add-on das die Standard-Namensplaketten mit Midnight-ähnlichen Namensplaketten ersetzt.
