@@ -1,9 +1,17 @@
-## Interface: 30300, 30403
-## Version: 0.1.40
+## Interface: 30403
+## Version: 0.1.41
 ## Title: MidnightNameplates |T136142:16:16:0:0|t by |cff55d2ffD4KiR |T132115:16:16:0:0|t
 ## Notes: An add-on that replaces the default nameplates with midnight-like nameplates.
 ## Notes-deDE: Ein Add-on das die Standard-Namensplaketten mit Midnight-ähnlichen Namensplaketten ersetzt.
+## Notes-esES: Un complemento que reemplaza las placas de identificación predeterminadas con placas de estilo Midnight.
+## Notes-esMX: Un complemento que reemplaza las placas de identificación predeterminadas con placas de estilo Midnight.
+## Notes-frFR: Un module complémentaire qui remplace les plaques d'identification par défaut par des plaques de style Midnight.
+## Notes-itIT: Un add-on che sostituisce le targhette predefinite con targhette in stile Midnight.
+## Notes-koKR: 기본 명찰을 미드나이트 스타일 명찰로 교체하는 애드온입니다.
+## Notes-ptBR: Um addon que substitui as placas de identificação padrão por placas no estilo Midnight.
 ## Notes-ruRU: Заменяет стандартные индикаторы здоровья на индикаторы, соответствующие дополнению 'Полночь'.
+## Notes-zhCN: 一个将默认姓名板替换为午夜风格姓名板的插件。
+## Notes-zhTW: 一個將預設姓名板替換為午夜風格姓名板的外掛。
 ## Author: D4KiR |T132115:16:16:0:0|t
 ## Category: Unit Frames
 ## Category-deDE: Einheitenfenster
