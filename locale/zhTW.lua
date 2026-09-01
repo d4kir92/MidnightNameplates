@@ -1,0 +1,18 @@
+-- zhTW Chinese 繁體中文
+local _, MidnightNameplates = ...
+MidnightNameplates:AddTrans("zhTW", "LID_GENERAL", "一般")
+MidnightNameplates:AddTrans("zhTW", "LID_SHOWMINIMAPBUTTON", "顯示小地圖按鈕")
+MidnightNameplates:AddTrans("zhTW", "LID_NAMEPLATE", "姓名板")
+MidnightNameplates:AddTrans("zhTW", "LID_SIZE", "尺寸")
+MidnightNameplates:AddTrans("zhTW", "LID_BARWIDTH", "條寬度：%d（預設：140）")
+MidnightNameplates:AddTrans("zhTW", "LID_BARHEIGHT", "條高度：%d（預設：9）")
+MidnightNameplates:AddTrans("zhTW", "LID_TEXT", "文字")
+MidnightNameplates:AddTrans("zhTW", "LID_FONTSIZE", "字型大小：%d（預設：2）")
+MidnightNameplates:AddTrans("zhTW", "LID_SHOWLEVEL", "顯示等級")
+MidnightNameplates:AddTrans("zhTW", "LID_TARGET", "目標")
+MidnightNameplates:AddTrans("zhTW", "LID_TARGETARROWS", "目標箭頭")
+MidnightNameplates:AddTrans("zhTW", "LID_BARS", "狀態條")
+MidnightNameplates:AddTrans("zhTW", "LID_POWERBAR", "能量條（法力、能量、怒氣……）")
+MidnightNameplates:AddTrans("zhTW", "LID_CASTBAR", "施法條")
+MidnightNameplates:AddTrans("zhTW", "LID_AURAS", "光環")
+MidnightNameplates:AddTrans("zhTW", "LID_MAXDEBUFFS", "最大減益數量：%d（預設：5）")

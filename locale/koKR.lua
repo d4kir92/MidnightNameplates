@@ -1,0 +1,18 @@
+-- koKR Korean 한국어
+local _, MidnightNameplates = ...
+MidnightNameplates:AddTrans("koKR", "LID_GENERAL", "일반")
+MidnightNameplates:AddTrans("koKR", "LID_SHOWMINIMAPBUTTON", "미니맵 버튼 표시")
+MidnightNameplates:AddTrans("koKR", "LID_NAMEPLATE", "이름표")
+MidnightNameplates:AddTrans("koKR", "LID_SIZE", "크기")
+MidnightNameplates:AddTrans("koKR", "LID_BARWIDTH", "바 너비: %d (기본값: 140)")
+MidnightNameplates:AddTrans("koKR", "LID_BARHEIGHT", "바 높이: %d (기본값: 9)")
+MidnightNameplates:AddTrans("koKR", "LID_TEXT", "텍스트")
+MidnightNameplates:AddTrans("koKR", "LID_FONTSIZE", "글꼴 크기: %d (기본값: 2)")
+MidnightNameplates:AddTrans("koKR", "LID_SHOWLEVEL", "레벨 표시")
+MidnightNameplates:AddTrans("koKR", "LID_TARGET", "대상")
+MidnightNameplates:AddTrans("koKR", "LID_TARGETARROWS", "대상 화살표")
+MidnightNameplates:AddTrans("koKR", "LID_BARS", "바")
+MidnightNameplates:AddTrans("koKR", "LID_POWERBAR", "자원 바 (마나, 기력, 분노, ...)")
+MidnightNameplates:AddTrans("koKR", "LID_CASTBAR", "시전 바")
+MidnightNameplates:AddTrans("koKR", "LID_AURAS", "오라")
+MidnightNameplates:AddTrans("koKR", "LID_MAXDEBUFFS", "최대 약화 효과: %d (기본값: 5)")
