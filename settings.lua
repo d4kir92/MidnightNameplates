@@ -7,7 +7,7 @@ MidnightNameplates:RegisterEvent(MNNPSetup, "PLAYER_LOGIN")
 MNNPSetup:SetScript("OnEvent", function(self, event, ...)
     if event == "PLAYER_LOGIN" then
         MNNP = MNNP or {}
-        MidnightNameplates:SetVersion(136142, "0.1.41")
+        MidnightNameplates:SetVersion(136142, "0.2.0")
         MidnightNameplates:SetAddonOutput("MidnightNameplates", 136142)
         MidnightNameplates:AddSlash("mina", MidnightNameplates.ToggleSettings)
         MidnightNameplates:AddSlash("mnnp", MidnightNameplates.ToggleSettings)
@@ -16,7 +16,7 @@ MNNPSetup:SetScript("OnEvent", function(self, event, ...)
             ["name"] = "MidnightNameplates",
             ["icon"] = 136142,
             ["dbtab"] = MNNP,
-            ["vTT"] = {{"MidnightNameplates", "v" .. MidnightNameplates:GetVersion()}, {MidnightNameplates:Trans("LID_LEFTCLICK"), MidnightNameplates:Trans("LID_OPENSETTINGS")}, {MidnightNameplates:Trans("LID_RIGHTCLICK"), MidnightNameplates:Trans("LID_HIDEMINIMAPBUTTON")}},
+            ["vTT"] = {{"|T136142:16:16:0:0|t MidnightNameplates", "v" .. MidnightNameplates:GetVersion()}, {MidnightNameplates:Trans("LID_LEFTCLICK"), MidnightNameplates:Trans("LID_OPENSETTINGS")}, {MidnightNameplates:Trans("LID_RIGHTCLICK"), MidnightNameplates:Trans("LID_HIDEMINIMAPBUTTON")}},
             ["funcL"] = function() MidnightNameplates:ToggleSettings() end,
             ["funcR"] = function()
                 MidnightNameplates:SV(MNNP, "SHOWMINIMAPBUTTON", false)
@@ -39,7 +39,6 @@ local function GetCollapsed(key)
     if key == nil then return nil end
     if type(MNNP) ~= "table" then return nil end
     if type(MNNP["COLLAPSED"]) ~= "table" then return nil end
-
     return MNNP["COLLAPSED"][key]
 end
 
@@ -169,12 +168,7 @@ function MidnightNameplates:InitSettings()
 
     AddCheckbox("SHOWLEVEL", true, function() UpdateNames() end)
     AddCategory("TARGET", 2)
-    AddCheckbox("TARGETARROWS", false, function()
-        ForEachPlate(function(plate)
-            if plate.MINA_TARGET then MidnightNameplates:UpdateArrows(plate) end
-        end)
-    end)
-
+    AddCheckbox("TARGETARROWS", false, function() ForEachPlate(function(plate) MidnightNameplates:UpdateArrows(plate) end) end)
     AddCategory("BARS")
     AddCheckbox("POWERBAR", true, function(value)
         ForEachPlate(function(plate, unit)
@@ -198,11 +192,6 @@ function MidnightNameplates:InitSettings()
     end)
 
     AddCategory("AURAS")
-    AddSlider("MAXDEBUFFS", 5, 1, 9, 1, 0, function()
-        ForEachPlate(function(plate, unit)
-            if unit then MidnightNameplates:UpdateDebuffs(plate, unit) end
-        end)
-    end)
-
+    AddSlider("MAXDEBUFFS", 5, 1, 9, 1, 0, function() ForEachPlate(function(plate, unit) if unit then MidnightNameplates:UpdateDebuffs(plate, unit) end end) end)
     mn_settings:ResumeLayout()
 end

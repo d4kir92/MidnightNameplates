@@ -197,6 +197,8 @@ function MidnightNameplates:IconOnUpdate(sel, elapsed)
 end
 
 function MidnightNameplates:UpdateArrows(plate)
+    if plate == nil then return end
+    if plate.MINA_TARGET == nil then return end
     if not MNNP["TARGETARROWS"] then
         plate.MINA_TARGET.IconL:Hide()
         plate.MINA_TARGET.IconR:Hide()
@@ -207,21 +209,34 @@ function MidnightNameplates:UpdateArrows(plate)
 end
 
 local oldTarget = nil
+local function HideTarget(plate)
+    if plate == nil then return end
+    if plate.MINA_TARGET == nil then return end
+    plate.MINA_TARGET:Hide()
+    MidnightNameplates:UpdateArrows(plate)
+end
+
 function MidnightNameplates:UpdateTarget(plate, unit, event)
-    if not UnitIsUnit(unit, "target") then
-        plate.MINA_TARGET:Hide()
-        MidnightNameplates:UpdateArrows(plate)
+    if unit == nil or not UnitIsUnit(unit, "target") then
+        HideTarget(plate)
+        if oldTarget and not UnitExists("target") then
+            HideTarget(oldTarget)
+            oldTarget = nil
+        end
 
         return
     end
 
-    if oldTarget and oldTarget.MINA_TARGET and oldTarget.MINA_TARGET then
-        oldTarget.MINA_TARGET:Hide()
-        MidnightNameplates:UpdateArrows(oldTarget)
+    if plate == nil or plate.MINA_TARGET == nil then
+        if oldTarget then
+            HideTarget(oldTarget)
+            oldTarget = nil
+        end
+
+        return
     end
 
-    if unit == nil then return end
-    if not plate or not plate.MINA_TARGET or not plate.MINA_TARGET then return end
+    if oldTarget and oldTarget ~= plate then HideTarget(oldTarget) end
     plate.MINA_TARGET:Show()
     MidnightNameplates:UpdateArrows(plate)
     oldTarget = plate
