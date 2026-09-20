@@ -1,6 +1,8 @@
 ## Interface-Classic: 11509
+## Interface-Forever: 16001
 ## Interface-BCC: 20506
 ## Interface-Wrath: 30403
+## Interface-Titan: 38002
 ## Interface-Cata: 40402
 ## Interface-Mists: 50504
 
