@@ -7,16 +7,16 @@ MidnightNameplates:RegisterEvent(MNNPSetup, "PLAYER_LOGIN")
 MNNPSetup:SetScript("OnEvent", function(self, event, ...)
     if event == "PLAYER_LOGIN" then
         MNNP = MNNP or {}
-        MidnightNameplates:SetVersion(136142, "0.2.1")
-        MidnightNameplates:SetAddonOutput("MidnightNameplates", 136142)
+        MidnightNameplates:SetVersion()
+        MidnightNameplates:SetAddonOutput()
         MidnightNameplates:AddSlash("mina", MidnightNameplates.ToggleSettings)
         MidnightNameplates:AddSlash("mnnp", MidnightNameplates.ToggleSettings)
         MidnightNameplates:AddSlash("MidnightNameplates", MidnightNameplates.ToggleSettings)
         MidnightNameplates:CreateMinimapButton({
             ["name"] = "MidnightNameplates",
-            ["icon"] = 136142,
+            ["icon"] = MidnightNameplates:GetAddonIcon(),
             ["dbtab"] = MNNP,
-            ["vTT"] = {{"|T136142:16:16:0:0|t MidnightNameplates", "v" .. MidnightNameplates:GetVersion()}, {MidnightNameplates:Trans("LID_LEFTCLICK"), MidnightNameplates:Trans("LID_OPENSETTINGS")}, {MidnightNameplates:Trans("LID_RIGHTCLICK"), MidnightNameplates:Trans("LID_HIDEMINIMAPBUTTON")}},
+            ["vTT"] = {{format("|T%s:16:16:0:0|t MidnightNameplates", MidnightNameplates:GetAddonIcon()),"v" .. MidnightNameplates:GetVersion()}, {MidnightNameplates:Trans("LID_LEFTCLICK"), MidnightNameplates:Trans("LID_OPENSETTINGS")}, {MidnightNameplates:Trans("LID_RIGHTCLICK"), MidnightNameplates:Trans("LID_HIDEMINIMAPBUTTON")}},
             ["funcL"] = function() MidnightNameplates:ToggleSettings() end,
             ["funcR"] = function()
                 MidnightNameplates:SV(MNNP, "SHOWMINIMAPBUTTON", false)
@@ -130,7 +130,7 @@ function MidnightNameplates:InitSettings()
         end,
         ["getCollapsed"] = function(key) return GetCollapsed(key) end,
         ["setCollapsed"] = function(key, collapsed) SetCollapsed(key, collapsed) end,
-        ["title"] = format("|T136142:16:16:0:0|t MidnightNameplates v%s", MidnightNameplates:GetVersion())
+        ["title"] = format("|T%s:16:16:0:0|t MidnightNameplates v%s", MidnightNameplates:GetAddonIcon(), MidnightNameplates:GetVersion())
     })
 
     mn_settings:SuspendLayout()
